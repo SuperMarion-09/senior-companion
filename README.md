@@ -57,17 +57,21 @@ senior-companion/
 └── frontend/                   ← React app
     ├── public/index.html        ← the single HTML page React renders into
     ├── src/
-    │   ├── index.js             ← entry point: router + auth provider
+    │   ├── index.js             ← entry point: fonts, router, notifications + auth providers
     │   ├── App.js               ← list of pages (routes)
-    │   ├── index.css            ← global styles (large, high-contrast text)
-    │   ├── components/          ← small reusable building blocks
-    │   │   ├── Alert.js, Button.js, FormInput.js, Spinner.js
+    │   ├── index.css            ← the design system: colours, text sizes, spacing, all component styles
+    │   ├── components/          ← reusable building blocks (see section 8b)
+    │   │   ├── Alert, Badge, Brand, Button, ConfirmDialog, EmptyState, Icon, PageHeader, Spinner
+    │   │   ├── FormField, FormInput, FormSelect, FormTextarea
     │   │   └── ProtectedRoute.js    ← only lets logged-in admins through
-    │   ├── layouts/MainLayout.js    ← header / content / footer frame
+    │   ├── layouts/
+    │   │   ├── PublicLayout.js      ← header / content / footer for public pages
+    │   │   └── AdminLayout.js       ← sidebar (desktop) or top bar (mobile) for admin pages
     │   ├── pages/
     │   │   ├── SystemStatusPage.js  ← "/"            – checks the connection to Laravel
     │   │   ├── AdminLoginPage.js    ← "/admin/login" – login form
-    │   │   ├── AdminHomePage.js     ← "/admin"       – placeholder after login
+    │   │   ├── AdminHomePage.js     ← "/admin"       – dashboard (bookings come later)
+    │   │   ├── StyleGuidePage.js    ← "/styleguide"  – every component on one page (only during `npm start`)
     │   │   └── NotFoundPage.js      ← any other URL
     │   ├── services/            ← all communication with the API
     │   │   ├── api.js               ← the shared Axios instance + error handling
@@ -75,6 +79,7 @@ senior-companion/
     │   │   └── authService.js
     │   ├── hooks/
     │   │   ├── useAuth.js           ← who is logged in; login() / logout()
+    │   │   ├── useToast.js          ← pop-up notifications: toast.success('Saved.')
     │   │   └── useHealthCheck.js
     │   └── assets/              ← images, fonts, etc. (empty for now)
     ├── .env.example             ← template for frontend settings (copy to .env)
@@ -302,6 +307,35 @@ Axios instance in `src/services/api.js`). Errors arrive as an `ApiError` with
 
 The settings that make this work are in `backend/.env`:
 `FRONTEND_URL` (CORS) and `SANCTUM_STATEFUL_DOMAINS`.
+
+---
+
+## 8b. Design system (frontend)
+
+Every page uses the same look, defined once in `frontend/src/index.css` and the
+components in `frontend/src/components/`. While `npm start` is running, open
+**http://localhost:3000/styleguide** to see all of them on one page.
+
+- **Colours, text sizes, spacing, corners and shadows** are CSS variables at the
+  top of `index.css` (`--color-primary`, `--text-lg`, `--space-4`, …). Use them
+  instead of typing colour codes or pixel sizes.
+- **Fonts:** *Atkinson Hyperlegible* for text (designed for readers with low
+  vision) and *Source Serif 4* for headings. Both are bundled with the app via
+  `@fontsource`, so no request goes to Google.
+- **Accessibility rules:** body text 18px, colour contrast at least WCAG AA,
+  click targets at least 44px tall, visible orange focus outline, every icon
+  next to a text label, "Skip to main content" link, and animations switched
+  off for people who ask their system for reduced motion.
+- **Which component for which message:**
+
+  | Situation | Use |
+  | --------- | --- |
+  | Form field is wrong | `error` prop on `FormInput` / `FormSelect` / `FormTextarea` |
+  | Whole form failed, or a page-level message | `<Alert type="error">` |
+  | Something finished (saved, logged out) | `toast.success('…')` from `useToast()` |
+  | Waiting for the API | `<Spinner>` or `isLoading` on the `Button` |
+  | A list has nothing in it | `<EmptyState>` |
+  | Action that can't be undone | `<ConfirmDialog>` |
 
 ---
 

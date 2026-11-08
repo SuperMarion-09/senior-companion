@@ -1,26 +1,35 @@
+import { useState } from 'react';
+import FormField from './FormField';
+import Icon from './Icon';
+
 /**
- * A labelled text input with an optional error message underneath.
- * `error` can be a string or the array of messages Laravel returns for a field.
+ * A labelled text input with an optional hint and error message.
+ * Password inputs get a "Show / Hide" button so people can check what they typed.
  */
-export default function FormInput({ id, label, error, ...props }) {
-  const message = Array.isArray(error) ? error[0] : error;
-  const errorId = `${id}-error`;
+export default function FormInput({ id, label, hint, error, optional, type = 'text', ...props }) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
-    <div className="form-field">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        name={id}
-        aria-invalid={Boolean(message)}
-        aria-describedby={message ? errorId : undefined}
-        {...props}
-      />
-      {message && (
-        <p id={errorId} className="form-field__error">
-          {message}
-        </p>
-      )}
-    </div>
+    <FormField id={id} label={label} hint={hint} error={error} optional={optional}>
+      {(fieldProps) =>
+        type === 'password' ? (
+          <div className="input-group">
+            <input {...fieldProps} type={isPasswordVisible ? 'text' : 'password'} className="input" {...props} />
+            <button
+              type="button"
+              className="input-group__toggle"
+              onClick={() => setIsPasswordVisible((visible) => !visible)}
+              aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+              aria-controls={id}
+            >
+              <Icon name={isPasswordVisible ? 'eye-off' : 'eye'} size={20} />
+              {isPasswordVisible ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        ) : (
+          <input {...fieldProps} type={type} className="input" {...props} />
+        )
+      }
+    </FormField>
   );
 }
