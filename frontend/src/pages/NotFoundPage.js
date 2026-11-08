@@ -1,13 +1,23 @@
-import { Link } from 'react-router-dom';
+import Button from '../components/Button';
+import EmptyState from '../components/EmptyState';
 
 export default function NotFoundPage() {
   return (
-    <section className="card">
-      <h1>Page not found</h1>
-      <p>Sorry, we couldn't find that page.</p>
-      <Link to="/" className="link">
-        Go back to the start
-      </Link>
-    </section>
+    <div className="page">
+      <section className="card">
+        <EmptyState
+          icon="search"
+          title="We couldn't find that page"
+          titleAs="h1"
+          action={
+            <Button to="/" icon="arrow-left">
+              Go to the homepage
+            </Button>
+          }
+        >
+          The link may be broken, or the page may have moved.
+        </EmptyState>
+      </section>
+    </div>
   );
 }
