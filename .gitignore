@@ -1,0 +1,40 @@
+# ------------------------------------------------------------------
+# Root .gitignore for the whole monorepo.
+# backend/.gitignore and frontend/.gitignore add app-specific rules.
+# ------------------------------------------------------------------
+
+# Secrets: never commit real environment files. Commit .env.example instead.
+.env
+.env.*
+!.env.example
+
+# Dependencies (re-created with `composer install` / `npm install`)
+node_modules/
+backend/vendor/
+
+# Build output
+frontend/build/
+backend/public/build/
+
+# Logs and caches
+*.log
+npm-debug.log*
+.eslintcache
+backend/.phpunit.cache
+backend/.phpunit.result.cache
+
+# macOS
+.DS_Store
+# "._*" files are created by macOS on non-Mac drives (exFAT/FAT); they hold no code.
+._*
+.AppleDouble
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
