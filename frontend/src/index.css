@@ -12,19 +12,21 @@
 /* ---------------------------------------------------------------- 1. Tokens */
 
 :root {
-  /* Colour: warm neutrals with a calm, trustworthy teal. All text colours
-     meet WCAG AA contrast on both --color-bg and --color-surface. */
-  --color-bg: #faf7f2;
+  /* Colour: warm cream background, sage green and charcoal text, for a calm,
+     trustworthy and welcoming feel. A soft sage is too light for white text,
+     so buttons and links use a deeper sage; the soft sage is for backgrounds.
+     All text colours meet WCAG AA contrast on both --color-bg and --color-surface. */
+  --color-bg: #fbf8f1;
   --color-surface: #ffffff;
-  --color-surface-muted: #f4efe7;
-  --color-border: #e4ddd2;
-  --color-border-strong: #8c857b; /* form controls: at least 3:1 against white */
-  --color-text: #1c2526;
-  --color-text-muted: #4d5859;
-  --color-primary: #0f5e5a;
-  --color-primary-hover: #0a4744;
-  --color-primary-soft: #e2efed;
-  --color-accent: #a84c25;
+  --color-surface-muted: #f3efe5;
+  --color-border: #e6e0d2;
+  --color-border-strong: #8a8579; /* form controls: at least 3:1 against white */
+  --color-text: #2e3333;
+  --color-text-muted: #5a605e;
+  --color-primary: #4e6e55;
+  --color-primary-hover: #3d5843;
+  --color-primary-soft: #e7eee4;
+  --color-accent: #a3502a;
   --color-accent-soft: #fbece4;
   --color-focus: #b45309;
 
@@ -63,9 +65,9 @@
   --radius: 12px;
   --radius-lg: 18px;
   --radius-full: 999px;
-  --shadow-sm: 0 1px 2px rgba(28, 37, 38, 0.06);
-  --shadow: 0 1px 3px rgba(28, 37, 38, 0.05), 0 8px 24px rgba(28, 37, 38, 0.06);
-  --shadow-lg: 0 16px 48px rgba(28, 37, 38, 0.18);
+  --shadow-sm: 0 1px 2px rgba(46, 51, 51, 0.06);
+  --shadow: 0 1px 3px rgba(46, 51, 51, 0.05), 0 8px 24px rgba(46, 51, 51, 0.06);
+  --shadow-lg: 0 16px 48px rgba(46, 51, 51, 0.18);
 
   /* Sizes */
   --control-height: 52px;
@@ -655,7 +657,7 @@ textarea.input {
 
 select.input {
   padding-right: 2.75rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%231c2526' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232e3333' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-position: right 0.9rem center;
   background-repeat: no-repeat;
   appearance: none;
@@ -877,7 +879,7 @@ select.input {
 }
 
 .dialog::backdrop {
-  background: rgba(28, 37, 38, 0.55);
+  background: rgba(46, 51, 51, 0.55);
 }
 
 .dialog__body {
