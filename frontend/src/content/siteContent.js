@@ -273,7 +273,8 @@ export const BOOKING_STATUSES = {
     tone: 'error',
     description: 'This booking has been cancelled. Contact us if you would like to book again.',
   },
-  declined: {
+  // Admins see "Rejected"; families see this gentler wording.
+  rejected: {
     label: 'Not Available',
     tone: 'error',
     description: 'We are sorry, we could not arrange a companion for this request. Please contact us for other dates.',

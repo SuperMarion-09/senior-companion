@@ -30,6 +30,17 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by(strtolower(is_string($email) ? $email : '').'|'.$request->ip());
         });
 
+        // New booking requests: 10 per hour for each IP address, against spam.
+        RateLimiter::for('bookings', function (Request $request) {
+            return Limit::perHour(10)->by($request->ip());
+        });
+
+        // Booking lookups: 10 per minute for each IP address, so references
+        // and phone numbers cannot be guessed.
+        RateLimiter::for('booking-lookup', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
+
         // Password rules for admin accounts (used by `php artisan admin:create`).
         Password::defaults(fn () => Password::min(12)->letters()->mixedCase()->numbers());
     }

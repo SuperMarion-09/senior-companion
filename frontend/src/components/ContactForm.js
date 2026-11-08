@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useToast } from '../hooks/useToast';
-import { sendContactMessage } from '../services/contactService';
+import { USE_MOCK_CONTACT, sendContactMessage } from '../services/contactService';
 import { isValidPhone } from '../utils/booking';
 import Alert from './Alert';
 import Button from './Button';
@@ -75,7 +75,7 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <MockModeNotice>The contact form is not connected yet, so messages are not sent. Please call or email us instead.</MockModeNotice>
+      <MockModeNotice active={USE_MOCK_CONTACT}>The contact form is not connected yet, so messages are not sent. Please call or email us instead.</MockModeNotice>
       {message && <Alert type="error">{message}</Alert>}
       {isSent && (
         <Alert type="success" title="Message received">

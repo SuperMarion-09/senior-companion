@@ -4,10 +4,11 @@ import Alert from './Alert';
 /**
  * Warns visitors while the booking API is not connected yet (mock mode, see
  * services/bookingService.js), so nobody thinks a real request was sent.
- * Disappears by itself once REACT_APP_USE_MOCK_BOOKINGS=false.
+ * Disappears by itself once REACT_APP_USE_MOCK_BOOKINGS=false. Pass `active`
+ * to follow a different switch (the contact form uses USE_MOCK_CONTACT).
  */
-export default function MockModeNotice({ children }) {
-  if (!USE_MOCK_BOOKINGS) return null;
+export default function MockModeNotice({ children, active = USE_MOCK_BOOKINGS }) {
+  if (!active) return null;
 
   return (
     <Alert type="info" title="Preview mode">

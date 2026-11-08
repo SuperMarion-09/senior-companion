@@ -2,15 +2,12 @@ import { normalizePhone } from '../utils/booking';
 import api, { ApiError, toFieldErrors } from './api';
 
 /*
-  ─── BACKEND INTEGRATION POINT ───────────────────────────────────────────
+  ─── BACKEND INTEGRATION ─────────────────────────────────────────────────
 
-  The Laravel booking endpoints do not exist yet. Until they do, this file
-  runs in MOCK MODE: bookings are saved in this browser's localStorage, so
-  the public booking pages can be built and tried out end to end. Mock
-  bookings are only visible in the browser that made them.
-
-  When the API is ready, set REACT_APP_USE_MOCK_BOOKINGS=false in
-  frontend/.env and restart `npm start`. The real calls below expect:
+  Bookings are sent to the Laravel API when REACT_APP_USE_MOCK_BOOKINGS=false
+  (see frontend/.env). Any other value (or none) runs MOCK MODE: bookings are
+  saved in this browser's localStorage only, for trying the public pages
+  without the backend. The API calls below use:
 
     POST /api/bookings
       body:  the booking form in snake_case (see toApiPayload)
@@ -54,6 +51,7 @@ function toApiPayload(form) {
     duration_hours: Number(form.durationHours),
     pickup_location: form.pickupLocation.trim(),
     destination: form.destination.trim(),
+    planned_activity: form.plannedActivity.trim() || null,
     special_instructions: form.specialInstructions.trim() || null,
     agreed_to_terms: true,
   };

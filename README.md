@@ -21,8 +21,11 @@ error handling, admin login and a health check.
 
 **Phase 2 (client-facing website)** adds the public pages families use: the
 homepage, a 3-step booking form, the booking confirmation page and a booking
-status lookup. The booking API is not built yet, so these pages currently run
-in **mock mode** (see section 8c). The admin booking dashboard comes later.
+status lookup.
+
+**Phase 3 (admin side)** adds the real booking API and database tables, and the
+admin area: a dashboard, booking management with a status workflow, internal
+notes, client history and status emails to families (see section 8d).
 
 ---
 
@@ -39,19 +42,29 @@ senior-companion/
 │   │   │   ├── Controllers/
 │   │   │   │   └── Api/
 │   │   │   │       ├── HealthController.php     ← GET  /api/health
-│   │   │   │       └── Admin/AuthController.php ← POST /api/admin/login, GET /api/admin/me, POST /api/admin/logout
-│   │   │   ├── Requests/Admin/LoginRequest.php  ← validates the login form
+│   │   │   │       ├── BookingController.php    ← public: create a booking, look one up
+│   │   │   │       └── Admin/                   ← login, dashboard, bookings, clients (admins only)
+│   │   │   ├── Requests/                        ← validation: BookingRules.php (shared booking rules), Admin/…
 │   │   │   └── Responses/ApiResponse.php        ← builds every JSON response (one standard shape)
-│   │   ├── Models/Admin.php                     ← administrator account model
-│   │   └── Providers/AppServiceProvider.php     ← login rate limit + password rules
+│   │   ├── Models/
+│   │   │   ├── Admin.php                        ← administrator account model
+│   │   │   ├── Booking.php                      ← booking + status workflow + search
+│   │   │   └── BookingActivity.php              ← timeline: status changes, notes, edits
+│   │   ├── Services/BookingStatusService.php    ← changes a status safely, emails the family
+│   │   ├── Notifications/BookingStatusChanged.php ← the email to families
+│   │   ├── Support/Phone.php, Rules/PhilippinePhone.php ← phone number checks
+│   │   └── Providers/AppServiceProvider.php     ← rate limits + password rules
 │   ├── bootstrap/app.php        ← routing, Sanctum middleware, API error handling
 │   ├── config/
 │   │   ├── auth.php             ← logins use the Admin model
 │   │   ├── cors.php             ← which websites may call the API
+│   │   ├── kaagapay.php         ← business time zone, contact details for emails
 │   │   └── sanctum.php          ← cookie-based login for the React app
 │   ├── database/
 │   │   ├── migrations/0001_01_01_000000_create_admins_table.php ← admins, sessions, password resets
-│   │   └── factories/AdminFactory.php           ← fake admins for tests
+│   │   ├── migrations/2026_11_08_000000_create_bookings_table.php ← bookings, booking_activities
+│   │   ├── seeders/DemoBookingSeeder.php        ← sample bookings for local testing only
+│   │   └── factories/                           ← fake admins and bookings for tests
 │   ├── routes/
 │   │   ├── api.php              ← all API endpoints (prefixed with /api)
 │   │   ├── web.php              ← GET / (just says "this is the API")
@@ -83,12 +96,17 @@ senior-companion/
     │   │   ├── BookingStatusPage.js      ← "/booking-status"    – look up a booking
     │   │   ├── SystemStatusPage.js       ← "/system-status"     – checks the connection to Laravel
     │   │   ├── AdminLoginPage.js         ← "/admin/login"       – login form
-    │   │   ├── AdminHomePage.js          ← "/admin"             – dashboard (bookings come later)
+    │   │   ├── AdminHomePage.js          ← "/admin"             – dashboard: booking counts, pending requests, coming up
+    │   │   ├── AdminBookingsPage.js      ← "/admin/bookings"    – search, filter, sort, pages
+    │   │   ├── AdminBookingDetailPage.js ← "/admin/bookings/KGP-…" – details, status actions, edit, notes
+    │   │   ├── AdminClientsPage.js       ← "/admin/clients"     – clients worked out from bookings
+    │   │   ├── AdminClientDetailPage.js  ← "/admin/clients/…"   – one client's contact info and history
     │   │   ├── StyleGuidePage.js         ← "/styleguide"        – every component on one page (only during `npm start`)
     │   │   └── NotFoundPage.js           ← any other URL
     │   ├── services/            ← all communication with the API
     │   │   ├── api.js               ← the shared Axios instance + error handling
-    │   │   ├── bookingService.js    ← create / look up bookings (mock mode for now, see 8c)
+    │   │   ├── bookingService.js    ← create / look up bookings (public, see 8c)
+    │   │   ├── adminService.js      ← dashboard, bookings and clients for admins (see 8d)
     │   │   ├── contactService.js    ← contact form (mock mode for now)
     │   │   ├── healthService.js
     │   │   └── authService.js
@@ -212,7 +230,7 @@ cp .env.example .env
 
 ```ini
 REACT_APP_API_URL=http://localhost:8000
-REACT_APP_USE_MOCK_BOOKINGS=true   # see section 8c
+REACT_APP_USE_MOCK_BOOKINGS=false  # true = try the public pages without the backend (section 8c)
 ```
 
 > Anything starting with `REACT_APP_` ends up in the public JavaScript. Never put
@@ -309,6 +327,16 @@ All endpoints live under `/api` and always answer with JSON in one of two shapes
 | POST   | `/api/admin/login`   | No           | Log in (`email`, `password`) |
 | GET    | `/api/admin/me`      | Yes          | Current admin's details      |
 | POST   | `/api/admin/logout`  | Yes          | Log out                      |
+| POST   | `/api/bookings`        | No | Booking request from the website (10 per hour per IP) |
+| POST   | `/api/bookings/lookup` | No | Booking status lookup (10 per minute per IP) |
+| GET    | `/api/admin/dashboard` | Yes | Counts per status, upcoming, pending and next bookings |
+| GET    | `/api/admin/bookings`  | Yes | List: `search`, `status`, `date_from`, `date_to`, `sort` (`created_at`/`booking_date`), `direction`, `page`, `per_page` |
+| GET    | `/api/admin/bookings/{reference}` | Yes | All details, allowed status actions, activity timeline |
+| PUT    | `/api/admin/bookings/{reference}` | Yes | Edit details (pending/confirmed bookings only) |
+| POST   | `/api/admin/bookings/{reference}/status` | Yes | Change status: `status`, `reason`, `notify_client` |
+| POST   | `/api/admin/bookings/{reference}/notes`  | Yes | Add an internal note: `body` |
+| GET    | `/api/admin/clients`   | Yes | Clients (from bookings): `search`, `page` |
+| GET    | `/api/admin/clients/{clientKey}` | Yes | One client's contact details and bookings |
 
 In React, always call the API through `src/services/` (which uses the shared
 Axios instance in `src/services/api.js`). Errors arrive as an `ApiError` with
@@ -375,40 +403,95 @@ in the real ones.
 Replace it with a real photo of Kaagapay companions and clients, taken with
 their written consent, when you have one.
 
-### Mock mode (until the booking API exists)
+### Connected to Laravel (and mock mode)
 
-The Laravel booking endpoints are not built yet. While
-`REACT_APP_USE_MOCK_BOOKINGS` is not `false`:
+With `REACT_APP_USE_MOCK_BOOKINGS=false` (the default in `.env.example`), the
+booking form and status lookup use the Laravel API (`POST /api/bookings`,
+`POST /api/bookings/lookup`). **Restart `npm start` after changing `.env`.**
 
-- bookings are saved in the visitor's **own browser** (localStorage) only, so
-  you can try the whole flow (book → confirmation → check status);
-- the contact form does not send anything;
-- a blue **"Preview mode"** notice is shown on the booking, status and contact
-  forms, so nobody thinks a real request was sent.
+Set it to `true` to try the public pages without the backend: bookings are then
+saved in the visitor's own browser only and a blue **"Preview mode"** notice is
+shown. The contact form has its own switch, `REACT_APP_USE_MOCK_CONTACT`, and
+stays in preview mode until a `POST /api/contact-messages` endpoint exists.
 
-**Connecting the real API:** build these endpoints in Laravel, then set
-`REACT_APP_USE_MOCK_BOOKINGS=false` in `frontend/.env` and restart `npm start`.
-The exact request and response shapes are documented at the top of
-`frontend/src/services/bookingService.js`.
+Privacy rules, enforced in Laravel (the browser can be bypassed):
 
-| Method | Endpoint | Body | Returns |
-| ------ | -------- | ---- | ------- |
-| POST | `/api/bookings` | the form in snake_case (`client_name`, `contact_number`, `service_type`, `booking_date`, `start_time`, `duration_hours`, …) | 201 + the booking, status `pending` |
-| POST | `/api/bookings/lookup` | `reference`, `contact_number` | 200 + the booking, or 404 |
-| POST | `/api/contact-messages` | `name`, `contact_number`, `email`, `message` | 201 |
+- the lookup returns a booking only when the reference **and** the phone number
+  match, and only these fields: reference, client name, service, date, start
+  time, duration, status (never phone numbers, addresses or emergency contacts);
+- it gives the same 404 message whether the reference or the phone number is wrong;
+- both public endpoints are rate-limited (see `AppServiceProvider`).
 
-Privacy rules for `/api/bookings/lookup`, which **must be enforced in Laravel**
-(the browser can be bypassed):
+Laravel re-checks every booking rule the form checks (minimum 3 hours, maximum
+10, start times 7:00 AM–5:00 PM, date not in the past or more than 6 months
+ahead, agreement ticked, valid Philippine phone numbers): see
+`backend/app/Http/Requests/BookingRules.php` and `frontend/src/utils/booking.js`.
 
-- return a booking only when the reference **and** the phone number match, and
-  only these fields: reference, client name, service, date, start time,
-  duration, status (never phone numbers or addresses);
-- give the same 404 message whether the reference or the phone number is wrong;
-- rate-limit it (like the admin login) so references cannot be guessed.
+---
 
-The backend must also re-check every booking rule the form checks (minimum 3
-hours, date not in the past, all agreements ticked, valid phone numbers): see
-`frontend/src/utils/booking.js`.
+## 8d. Admin side (Phase 3)
+
+Log in at http://localhost:3000/admin/login with an account made by
+`php artisan admin:create` (there is no public registration). Every admin page
+and `/api/admin/*` endpoint requires that login; Laravel checks it on every
+request, not just the browser.
+
+| Page | What it does |
+| ---- | ------------ |
+| Dashboard | Summary cards (click one to open the matching list), quick search and shortcuts, four charts, pending requests with Confirm / Reject, upcoming bookings, recent requests and recent admin activity. See *Dashboard charts* below. |
+| Bookings | Search by reference, client or contact name, or phone number; filter by status and booking date; sort by request date or booking date. Filters stay in the address, so Back works. |
+| Booking details | Client, booking, emergency and administrative information; status buttons; **Edit details**; internal notes; the activity timeline (who did what, when). |
+| Clients | Everyone who has booked, with their booking history split into upcoming and previous. |
+
+**Status workflow** (`backend/app/Models/Booking.php`, `TRANSITIONS`):
+
+```
+pending ──► confirmed ──► completed
+   │            └───────► cancelled
+   ├──► rejected
+   └──► cancelled
+```
+
+Rejected, cancelled and completed bookings are final (notes can still be
+added). A booking whose start time has passed cannot be confirmed, and a booking
+can only be completed after its start time. Every change asks for confirmation
+first and is checked again by Laravel inside a database lock, so two admins
+clicking at once cannot both change it.
+
+**Dashboard charts** (all from `GET /api/admin/dashboard`, grouped in Philippine time):
+
+| Chart | Shows |
+| ----- | ----- |
+| Booking requests (line) | Requests received per day (7 days), week (8 weeks, Monday–Sunday) or month (6 months), with the total compared to the same-length period before. The current day/week/month is still filling up. |
+| Bookings by status (donut) | Every booking by status; the total equals the *Total bookings* card. |
+| Most requested services (bars) | Every service the website offers, including ones nobody has booked yet. |
+| Busiest days (columns) | Bookings per weekday over the last 12 months, by the day the service takes place (rejected and cancelled left out) or the day the request was sent. |
+
+The charts are drawn as plain SVG/HTML (no chart library). Each one has a
+*Show as a table* link with the exact numbers. Percentages are only shown as a
+share of a total, never as growth rates, so small numbers are not exaggerated.
+
+**Clients** are not a separate table: bookings with the same senior's name and
+family contact number belong to one client (`client_key`). Contact details shown
+are from their most recent booking.
+
+**Emails to families.** When confirming, rejecting or cancelling, the dialog
+offers *Email the family* if the booking has an email address. The email is
+sent only after the change is saved, using Laravel's built-in notifications
+(`app/Notifications/BookingStatusChanged.php`); if sending fails, the change
+still stands and the admin is told to call instead. With `MAIL_MAILER=log`
+(the default) emails are written to `backend/storage/logs/laravel.log`, not
+sent. Set the `MAIL_*` values in `backend/.env` to send real email.
+
+**Time zone.** Booking dates and times are Philippine time
+(`BUSINESS_TIMEZONE=Asia/Manila`, see `backend/config/kaagapay.php`), so
+"today" and "upcoming" are right even though database timestamps are in UTC.
+
+**Sample data for trying it out locally** (never on the live site):
+
+```bash
+cd backend && php artisan db:seed --class=DemoBookingSeeder
+```
 
 ---
 

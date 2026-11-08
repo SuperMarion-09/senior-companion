@@ -2,6 +2,10 @@ import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './layouts/AdminLayout';
 import PublicLayout, { PageContainer } from './layouts/PublicLayout';
+import AdminBookingDetailPage from './pages/AdminBookingDetailPage';
+import AdminBookingsPage from './pages/AdminBookingsPage';
+import AdminClientDetailPage from './pages/AdminClientDetailPage';
+import AdminClientsPage from './pages/AdminClientsPage';
 import AdminHomePage from './pages/AdminHomePage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import BookingConfirmationPage from './pages/BookingConfirmationPage';
@@ -33,6 +37,10 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminHomePage />} />
+          <Route path="/admin/bookings" element={<AdminBookingsPage />} />
+          <Route path="/admin/bookings/:reference" element={<AdminBookingDetailPage />} />
+          <Route path="/admin/clients" element={<AdminClientsPage />} />
+          <Route path="/admin/clients/:clientKey" element={<AdminClientDetailPage />} />
         </Route>
       </Route>
     </Routes>
