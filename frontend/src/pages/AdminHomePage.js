@@ -1,34 +1,34 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Alert from '../components/Alert';
-import Button from '../components/Button';
+import EmptyState from '../components/EmptyState';
+import PageHeader from '../components/PageHeader';
 import { useAuth } from '../hooks/useAuth';
 
+function greeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
 /**
- * Placeholder shown after login, proving authentication works.
- * The admin dashboard is built in a later phase.
+ * Admin start page. The bookings list is added in a later phase.
  */
 export default function AdminHomePage() {
-  const { admin, logout } = useAuth();
-  const navigate = useNavigate();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    await logout().catch(() => {});
-    navigate('/admin/login', { replace: true });
-  };
+  const { admin } = useAuth();
+  const firstName = admin.name.split(' ')[0];
 
   return (
-    <section className="card">
-      <h1>Welcome, {admin.name}</h1>
-      <Alert type="success">
-        You are logged in as <strong>{admin.email}</strong>.
-      </Alert>
-      <p>The administrator dashboard will be added in a later phase.</p>
-      <Button variant="secondary" onClick={handleLogout} isLoading={isLoggingOut} loadingText="Logging out…">
-        Log out
-      </Button>
-    </section>
+    <>
+      <PageHeader
+        eyebrow="Dashboard"
+        title={`${greeting()}, ${firstName}`}
+        description="This is where you will manage companionship bookings."
+      />
+
+      <section className="card">
+        <EmptyState icon="calendar" title="No bookings yet">
+          When families request a companion through the website, their bookings will appear here.
+        </EmptyState>
+      </section>
+    </>
   );
 }

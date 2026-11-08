@@ -14,7 +14,7 @@ export default function ProtectedRoute() {
   const location = useLocation();
 
   if (isChecking) {
-    return <Spinner label="Checking your login…" />;
+    return <Spinner label="Checking your login…" center />;
   }
 
   if (!isAuthenticated) {
