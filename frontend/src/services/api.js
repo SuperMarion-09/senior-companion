@@ -33,6 +33,16 @@ export function toApiError(error) {
   return new ApiError('Cannot reach the server. Please check that the backend is running.');
 }
 
+/**
+ * Laravel names form fields in snake_case (contact_number); the React forms use
+ * camelCase (contactNumber). Renames the keys of error.errors to match the form.
+ */
+export function toFieldErrors(errors = {}) {
+  return Object.fromEntries(
+    Object.entries(errors).map(([key, messages]) => [key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()), messages])
+  );
+}
+
 // Shared Axios instance. Import this (not axios itself) in every service file.
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
