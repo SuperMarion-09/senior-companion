@@ -1,6 +1,6 @@
 {
-  "short_name": "Senior Companion",
-  "name": "Senior Companion Booking",
+  "short_name": "Kaagapay",
+  "name": "Kaagapay Senior Companion Booking",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#4e6e55",
+  "background_color": "#fbf8f1"
 }

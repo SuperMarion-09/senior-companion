@@ -1,0 +1,94 @@
+/**
+ * A lola walking arm in arm with her Kaagapay companion.
+ * Drawn in SVG so it is sharp at every size and needs no image file.
+ * TODO: replace with a real photo of Kaagapay companions and clients
+ * (with their written consent) once one is available.
+ */
+export default function HeroIllustration({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 560 480" role="img" aria-labelledby="hero-illustration-title">
+      <title id="hero-illustration-title">
+        An elderly Filipino woman with a cane walks arm in arm with a smiling young companion carrying her shopping bag.
+      </title>
+
+      {/* Background */}
+      <circle cx="280" cy="250" r="214" fill="#e7eee4" />
+      <circle cx="438" cy="112" r="44" fill="#f3d9a4" />
+      <ellipse cx="280" cy="440" rx="236" ry="18" fill="#d5e0cf" />
+
+      {/* Plants */}
+      <ellipse cx="96" cy="404" rx="44" ry="40" fill="#9db59a" />
+      <ellipse cx="128" cy="418" rx="34" ry="28" fill="#7f9c7e" />
+      <ellipse cx="470" cy="412" rx="38" ry="32" fill="#9db59a" />
+      <path d="M470 380c-6-24 4-44 22-54-2 22-8 40-22 54z" fill="#7f9c7e" />
+      <path d="M462 384c-18-12-26-30-22-48 14 10 22 28 22 48z" fill="#7f9c7e" />
+
+      {/* Lola: cane and outer arm */}
+      <path d="M172 322c-4 38-6 76-6 114" stroke="#6b4a36" strokeWidth="6" strokeLinecap="round" fill="none" />
+      <path d="M172 322c-2-8 4-14 12-12" stroke="#6b4a36" strokeWidth="6" strokeLinecap="round" fill="none" />
+      <path d="M188 242c-10 26-14 50-12 76" stroke="#7d9a7f" strokeWidth="18" strokeLinecap="round" fill="none" />
+      <circle cx="176" cy="320" r="9" fill="#b98058" />
+
+      {/* Lola: legs, skirt, cardigan */}
+      <rect x="198" y="372" width="15" height="62" rx="7" fill="#b98058" />
+      <rect x="219" y="372" width="15" height="62" rx="7" fill="#b98058" />
+      <ellipse cx="203" cy="436" rx="13" ry="6" fill="#3d3a36" />
+      <ellipse cx="231" cy="436" rx="13" ry="6" fill="#3d3a36" />
+      <path d="M192 298h50l14 96h-78z" fill="#c97b5b" />
+      <path d="M184 246c0-14 12-22 31-22s31 8 31 22l-2 60h-58z" fill="#7d9a7f" />
+      <path d="M206 226l9 22 9-22" fill="#f6eedd" />
+      <rect x="208" y="210" width="14" height="20" rx="5" fill="#b98058" />
+
+      {/* Lola: head */}
+      <circle cx="195" cy="166" r="15" fill="#d8d4cc" />
+      <circle cx="215" cy="184" r="31" fill="#d8d4cc" />
+      <circle cx="217" cy="193" r="27" fill="#b98058" />
+      <circle cx="207" cy="194" r="7" fill="none" stroke="#3d3a36" strokeWidth="2.5" />
+      <circle cx="227" cy="194" r="7" fill="none" stroke="#3d3a36" strokeWidth="2.5" />
+      <path d="M214 194h6" stroke="#3d3a36" strokeWidth="2.5" />
+      <circle cx="207" cy="194" r="2" fill="#3d3a36" />
+      <circle cx="227" cy="194" r="2" fill="#3d3a36" />
+      <circle cx="201" cy="206" r="5" fill="#e39a83" opacity="0.55" />
+      <circle cx="234" cy="206" r="5" fill="#e39a83" opacity="0.55" />
+      <path d="M209 208q8 7 16 0" stroke="#3d3a36" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+
+      {/* Companion: outer arm and shopping bag */}
+      <path d="M360 214c8 28 12 56 10 86" stroke="#4e6e55" strokeWidth="18" strokeLinecap="round" fill="none" />
+      <path d="M362 300c0-14 8-20 16-20s16 6 16 20" stroke="#a3502a" strokeWidth="4" fill="none" />
+      <rect x="354" y="298" width="48" height="50" rx="8" fill="#f3d9a4" />
+      <path d="M366 320h24M366 330h16" stroke="#c9a86a" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="370" cy="302" r="9" fill="#9a6544" />
+
+      {/* Companion: legs, shirt */}
+      <rect x="310" y="326" width="19" height="106" rx="9" fill="#3f4a4a" />
+      <rect x="333" y="326" width="19" height="106" rx="9" fill="#3f4a4a" />
+      <ellipse cx="317" cy="434" rx="15" ry="7" fill="#e9e3d6" />
+      <ellipse cx="347" cy="434" rx="15" ry="7" fill="#e9e3d6" />
+      <path d="M298 214c0-14 13-22 32-22s32 8 32 22l-6 122h-52z" fill="#4e6e55" />
+      <path d="M320 194l10 18 10-18" fill="#f6eedd" />
+      <path d="M346 236a4 4 0 0 1 7 0 4 4 0 0 1 7 0c0 6-7 10-7 10s-7-4-7-10z" fill="#f3d9a4" />
+      <rect x="323" y="178" width="14" height="22" rx="5" fill="#9a6544" />
+
+      {/* Companion: inner arm, linked with Lola's */}
+      <path d="M302 216c-12 26-12 48-6 66h18" stroke="#4e6e55" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <circle cx="316" cy="283" r="9" fill="#9a6544" />
+      <path d="M244 244c8 22 20 34 40 38" stroke="#7d9a7f" strokeWidth="18" strokeLinecap="round" fill="none" />
+      <circle cx="288" cy="282" r="9" fill="#b98058" />
+
+      {/* Companion: head */}
+      <ellipse cx="358" cy="162" rx="11" ry="22" fill="#2b2622" />
+      <circle cx="330" cy="150" r="31" fill="#2b2622" />
+      <circle cx="328" cy="160" r="27" fill="#9a6544" />
+      <path d="M302 152c6-18 20-26 34-24 10 2 18 8 22 18-14-6-34-6-56 6z" fill="#2b2622" />
+      <circle cx="318" cy="162" r="2.6" fill="#2b2622" />
+      <circle cx="336" cy="162" r="2.6" fill="#2b2622" />
+      <circle cx="312" cy="172" r="5" fill="#d98b6f" opacity="0.5" />
+      <circle cx="343" cy="172" r="5" fill="#d98b6f" opacity="0.5" />
+      <path d="M319 174q8 8 16 0" stroke="#2b2622" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+
+      {/* Small hearts */}
+      <path d="M266 118a6 6 0 0 1 10 0 6 6 0 0 1 10 0c0 9-10 15-10 15s-10-6-10-15z" fill="#c97b5b" opacity="0.8" />
+      <path d="M244 92a4 4 0 0 1 7 0 4 4 0 0 1 7 0c0 6-7 10-7 10s-7-4-7-10z" fill="#c97b5b" opacity="0.55" />
+    </svg>
+  );
+}

@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
             <Icon name="lock" size={26} />
           </span>
           <h1>Administrator login</h1>
-          <p className="text-muted">For Senior Companion staff only.</p>
+          <p className="text-muted">For Kaagapay staff only.</p>
         </div>
 
         {message && <Alert type="error">{message}</Alert>}

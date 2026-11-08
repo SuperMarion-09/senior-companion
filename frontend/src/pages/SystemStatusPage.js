@@ -7,8 +7,7 @@ import { useHealthCheck } from '../hooks/useHealthCheck';
 import { API_BASE_URL } from '../services/api';
 
 /**
- * Phase 1 developer page: confirms React can talk to Laravel.
- * The real public homepage replaces this in a later phase.
+ * Developer page at /system-status: confirms React can talk to Laravel.
  */
 export default function SystemStatusPage() {
   const { status, result, error, refresh } = useHealthCheck();
