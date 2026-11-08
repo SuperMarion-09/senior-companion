@@ -33,9 +33,13 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // The API answered 401 (session ended): forget the admin so ProtectedRoute
+  // sends them to the login page.
+  const sessionExpired = useCallback(() => setAdmin(null), []);
+
   const value = useMemo(
-    () => ({ admin, isAuthenticated: admin !== null, isChecking, login, logout }),
-    [admin, isChecking, login, logout]
+    () => ({ admin, isAuthenticated: admin !== null, isChecking, login, logout, sessionExpired }),
+    [admin, isChecking, login, logout, sessionExpired]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

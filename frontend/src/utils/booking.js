@@ -71,6 +71,7 @@ export const EMPTY_BOOKING = {
   durationHours: String(MIN_DURATION_HOURS),
   pickupLocation: '',
   destination: '',
+  plannedActivity: '',
   specialInstructions: '',
   ...Object.fromEntries(AGREEMENTS.map((agreement) => [agreement.id, false])),
 };
@@ -83,7 +84,16 @@ export const BOOKING_STEPS = [
   },
   {
     title: 'Service details',
-    fields: ['serviceType', 'bookingDate', 'startTime', 'durationHours', 'pickupLocation', 'destination', 'specialInstructions'],
+    fields: [
+      'serviceType',
+      'bookingDate',
+      'startTime',
+      'durationHours',
+      'pickupLocation',
+      'destination',
+      'plannedActivity',
+      'specialInstructions',
+    ],
   },
   {
     title: 'Review and agree',
@@ -199,7 +209,9 @@ const RULES = {
     return null;
   },
   pickupLocation: (form) => requiredText(form.pickupLocation, 'Please enter where the companion should meet the client.', 255),
-  destination: (form) => requiredText(form.destination, 'Please tell us where you are going or what you plan to do.', 255),
+  destination: (form) => requiredText(form.destination, 'Please tell us where the companion and client will go.', 255),
+  plannedActivity: (form) =>
+    form.plannedActivity.trim().length > 255 ? 'Please keep the planned activity under 255 characters.' : null,
   specialInstructions: (form) =>
     form.specialInstructions.trim().length > 1000 ? 'Please keep special instructions under 1,000 characters.' : null,
   ...Object.fromEntries(

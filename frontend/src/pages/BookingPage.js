@@ -288,8 +288,14 @@ export default function BookingPage() {
                 />
                 <FormInput
                   {...field('destination')}
-                  label="Destination or planned activity"
-                  hint="For example: SM Megamall groceries, check-up at St. Luke’s, walk in the park"
+                  label="Destination"
+                  hint="For example: SM Megamall, St. Luke’s Medical Center, the park near home"
+                />
+                <FormInput
+                  {...field('plannedActivity')}
+                  label="Planned activity"
+                  optional
+                  hint="For example: buy groceries, attend a check-up, morning walk and merienda"
                 />
                 <FormTextarea
                   {...field('specialInstructions')}
@@ -336,7 +342,8 @@ export default function BookingPage() {
                       ['Start time', formatTime(form.startTime)],
                       ['Duration', formatDuration(form.durationHours)],
                       ['Pickup / meeting place', form.pickupLocation],
-                      ['Destination / activity', form.destination],
+                      ['Destination', form.destination],
+                      ['Planned activity', form.plannedActivity],
                       ['Special instructions', form.specialInstructions],
                     ]}
                   />

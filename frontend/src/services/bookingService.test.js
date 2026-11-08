@@ -1,6 +1,6 @@
-import { createBooking, findBooking } from './bookingService';
-
-// These tests run in mock mode (REACT_APP_USE_MOCK_BOOKINGS is not set).
+// Most tests run in mock mode, whatever frontend/.env says.
+process.env.REACT_APP_USE_MOCK_BOOKINGS = 'true';
+const { createBooking, findBooking } = require('./bookingService');
 const FORM = {
   clientName: 'Lourdes Santos',
   contactPersonName: 'Maria Santos',
@@ -13,7 +13,8 @@ const FORM = {
   startTime: '09:00',
   durationHours: '4',
   pickupLocation: '12 Mabini St., Pasig City',
-  destination: 'Morning walk',
+  destination: 'Rizal Park',
+  plannedActivity: 'Morning walk',
   specialInstructions: '',
 };
 
@@ -37,4 +38,41 @@ test('a booking is found only with the matching contact number, and without priv
   expect(Object.keys(found).sort()).toEqual(
     ['bookingDate', 'clientName', 'durationHours', 'reference', 'serviceType', 'startTime', 'status'].sort()
   );
+});
+
+test('with the API connected, the form is sent in snake_case and only public fields come back', async () => {
+  process.env.REACT_APP_USE_MOCK_BOOKINGS = 'false';
+  let realService;
+  let api;
+  // A fresh copy of the module, so it reads the changed setting.
+  jest.isolateModules(() => {
+    api = require('./api').default;
+    realService = require('./bookingService');
+  });
+  const post = jest.spyOn(api, 'post').mockResolvedValue({
+    data: {
+      data: {
+        booking: {
+          reference: 'KGP-7H3K9Q',
+          client_name: 'Lourdes Santos',
+          service_type: 'walking',
+          booking_date: '2026-11-10',
+          start_time: '09:00',
+          duration_hours: 4,
+          status: 'pending',
+        },
+      },
+    },
+  });
+
+  const booking = await realService.createBooking(FORM);
+
+  expect(post).toHaveBeenCalledWith(
+    '/bookings',
+    expect.objectContaining({ client_name: 'Lourdes Santos', destination: 'Rizal Park', planned_activity: 'Morning walk', duration_hours: 4 })
+  );
+  expect(booking).toMatchObject({ reference: 'KGP-7H3K9Q', status: 'pending', durationHours: 4 });
+
+  post.mockRestore();
+  process.env.REACT_APP_USE_MOCK_BOOKINGS = 'true';
 });
