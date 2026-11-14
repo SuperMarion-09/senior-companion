@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Booking;
+use Carbon\CarbonImmutable;
 use App\Rules\PhilippinePhone;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -54,7 +55,8 @@ class BookingRules
     }
 
     /**
-     * Adds an error when the date and time are in the past or too far ahead.
+     * Adds an error when the date and time are in the past, less than
+     * MIN_NOTICE_HOURS from now, or too far ahead.
      * Skipped when the fields already have a format error.
      */
     public static function checkSchedule(Validator $validator, mixed $date, mixed $time): void
@@ -71,6 +73,9 @@ class BookingRules
             $validator->errors()->add('booking_date', 'Bookings can be made up to 6 months ahead. Please choose an earlier date.');
         } elseif ($date === $now->toDateString() && $time <= $now->format('H:i')) {
             $validator->errors()->add('start_time', 'This time has already passed today. Please choose a later time or another date.');
+        } elseif (CarbonImmutable::createFromFormat('Y-m-d H:i', "{$date} {$time}", $now->getTimezone())
+            ->lessThan($now->addHours(Booking::MIN_NOTICE_HOURS))) {
+            $validator->errors()->add('start_time', 'Bookings need at least '.Booking::MIN_NOTICE_HOURS.' hours’ notice. Please choose a later time or another date.');
         }
     }
 }

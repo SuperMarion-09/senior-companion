@@ -71,6 +71,9 @@ class Booking extends Model
 
     public const MAX_DAYS_AHEAD = 180;
 
+    /** A booking must start at least this many hours from now. */
+    public const MIN_NOTICE_HOURS = 6;
+
     private const FIRST_START_HOUR = 7;
 
     private const LAST_START_HOUR = 17;

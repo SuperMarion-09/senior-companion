@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
 import FormInput from '../components/FormInput';
+import PhoneInput from '../components/PhoneInput';
 import FormSelect from '../components/FormSelect';
 import FormTextarea from '../components/FormTextarea';
 import PageHeader from '../components/PageHeader';
@@ -100,10 +101,9 @@ export default function StyleGuidePage() {
         <h2>Form controls</h2>
         <form onSubmit={(event) => event.preventDefault()} noValidate>
           <FormInput id="sg-name" label="Your full name" autoComplete="name" />
-          <FormInput
+          <PhoneInput
             id="sg-phone"
             label="Phone number"
-            type="tel"
             hint="We will only call you about this booking."
             error="Please enter a phone number we can reach you on."
           />

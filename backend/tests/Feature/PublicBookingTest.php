@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Booking;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -65,6 +66,25 @@ class PublicBookingTest extends TestCase
         ]))->assertStatus(422)->assertJsonValidationErrors(['booking_date']);
 
         $this->assertSame(0, Booking::count());
+    }
+
+    public function test_same_day_bookings_need_six_hours_notice(): void
+    {
+        CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-11-18 10:15', 'Asia/Manila'));
+
+        try {
+            $this->postJson('/api/bookings', $this->payload([
+                'booking_date' => '2026-11-18',
+                'start_time' => '16:00',
+            ]))->assertStatus(422)->assertJsonValidationErrors(['start_time']);
+
+            $this->postJson('/api/bookings', $this->payload([
+                'booking_date' => '2026-11-18',
+                'start_time' => '16:30',
+            ]))->assertCreated();
+        } finally {
+            CarbonImmutable::setTestNow();
+        }
     }
 
     public function test_lookup_needs_both_reference_and_phone_and_hides_private_fields(): void

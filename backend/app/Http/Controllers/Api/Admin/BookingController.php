@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ChangeBookingStatusRequest;
 use App\Http\Requests\Admin\StoreBookingNoteRequest;
+use App\Http\Requests\Admin\StoreBookingRequest;
 use App\Http\Requests\Admin\UpdateBookingRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Booking;
@@ -16,8 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 /**
- * Booking management for administrators. Every route here sits behind
- * auth:sanctum, so only logged-in admins reach it.
+ * Booking management for administrators, including entering new bookings.
+ * Every route here sits behind auth:sanctum, so only logged-in admins reach it.
  */
 class BookingController extends Controller
 {
@@ -79,6 +80,38 @@ class BookingController extends Controller
             'bookings' => collect($page->items())->map->toAdminListArray()->values(),
             'pagination' => self::pagination($page),
         ]);
+    }
+
+    /**
+     * POST /api/admin/bookings
+     *
+     * A booking entered by an admin (phone call, walk-in). Saved as pending,
+     * or as confirmed when `confirm` is true. No email is sent.
+     */
+    public function store(StoreBookingRequest $request): JsonResponse
+    {
+        $status = $request->boolean('confirm') ? Booking::STATUS_CONFIRMED : Booking::STATUS_PENDING;
+
+        $booking = DB::transaction(function () use ($request, $status) {
+            $booking = new Booking($request->safe()->except(['agreed_to_terms', 'confirm']));
+            $booking->reference = Booking::generateReference();
+            $booking->status = $status;
+            $booking->terms_accepted_at = now();
+            $booking->save();
+
+            $booking->activities()->create([
+                'admin_id' => $request->user()->id,
+                'type' => BookingActivity::TYPE_CREATED,
+                'to_status' => $status,
+                'body' => $status === Booking::STATUS_CONFIRMED
+                    ? 'Booking entered and confirmed by an administrator.'
+                    : 'Booking entered by an administrator.',
+            ]);
+
+            return $booking;
+        });
+
+        return $this->bookingResponse($booking, "Booking {$booking->reference} created.", [], 201);
     }
 
     /**

@@ -5,6 +5,7 @@ import Badge from '../components/Badge';
 import BookingDetails from '../components/BookingDetails';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
+import PhoneInput from '../components/PhoneInput';
 import Icon from '../components/Icon';
 import MockModeNotice from '../components/MockModeNotice';
 import PageHeader from '../components/PageHeader';
@@ -22,7 +23,7 @@ function validate(form) {
   if (!form.contactNumber.trim()) {
     errors.contactNumber = 'Please enter the contact number you used when booking.';
   } else if (!isValidPhone(form.contactNumber)) {
-    errors.contactNumber = 'Please enter a valid Philippine phone number, for example 0917 123 4567.';
+    errors.contactNumber = 'Please enter a valid Philippine mobile number: 11 digits starting with 09, for example 09171234567.';
   }
   return errors;
 }
@@ -107,13 +108,10 @@ export default function BookingStatusPage() {
               onChange={handleChange}
               error={errors.reference}
             />
-            <FormInput
+            <PhoneInput
               id="contactNumber"
               label="Contact number used for booking"
-              hint="For example 0917 123 4567"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
+              hint="For example 09171234567"
               value={form.contactNumber}
               onChange={handleChange}
               error={errors.contactNumber}

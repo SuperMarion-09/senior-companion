@@ -37,6 +37,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+        Route::post('/bookings', [AdminBookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking:reference}', [AdminBookingController::class, 'show'])->name('bookings.show');
         Route::put('/bookings/{booking:reference}', [AdminBookingController::class, 'update'])->name('bookings.update');
         Route::post('/bookings/{booking:reference}/status', [AdminBookingController::class, 'changeStatus'])->name('bookings.status');

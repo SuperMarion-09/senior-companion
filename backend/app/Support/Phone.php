@@ -19,10 +19,10 @@ class Phone
     }
 
     /**
-     * Mobile (09XX XXX XXXX) or landline with area code (e.g. 02 8123 4567).
+     * Philippine mobile number: 09 followed by 9 digits (09XX XXX XXXX).
      */
     public static function isValid(?string $value): bool
     {
-        return preg_match('/^(09\d{9}|0[2-8]\d{7,9})$/', self::normalize($value)) === 1;
+        return preg_match('/^09\d{9}$/', self::normalize($value)) === 1;
     }
 }

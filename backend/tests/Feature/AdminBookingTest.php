@@ -31,6 +31,7 @@ class AdminBookingTest extends TestCase
 
         $this->getJson('/api/admin/dashboard')->assertUnauthorized();
         $this->getJson('/api/admin/bookings')->assertUnauthorized();
+        $this->postJson('/api/admin/bookings', [])->assertUnauthorized();
         $this->getJson("/api/admin/bookings/{$booking->reference}")->assertUnauthorized();
         $this->postJson("/api/admin/bookings/{$booking->reference}/status", ['status' => 'confirmed'])->assertUnauthorized();
         $this->postJson("/api/admin/bookings/{$booking->reference}/notes", ['body' => 'x'])->assertUnauthorized();
@@ -153,6 +154,45 @@ class AdminBookingTest extends TestCase
             ->assertOk()->assertJsonPath('data.notification', null);
 
         Notification::assertNothingSent();
+    }
+
+    public function test_admin_can_create_a_booking(): void
+    {
+        $data = [
+            'client_name' => 'Lolo Ernesto Garcia',
+            'contact_person_name' => 'Maria Garcia',
+            'contact_number' => '0917 222 3333',
+            'email' => null,
+            'emergency_contact_name' => 'Jose Garcia',
+            'emergency_contact_number' => '0918 444 5555',
+            'service_type' => 'appointment',
+            'booking_date' => Booking::now()->addDays(2)->toDateString(),
+            'start_time' => '10:00',
+            'duration_hours' => 4,
+            'pickup_location' => '5 Rizal Ave, Pasig',
+            'destination' => 'The Medical City',
+        ];
+
+        $this->actingAs($this->admin);
+
+        $this->postJson('/api/admin/bookings', array_merge($data, ['duration_hours' => 2]))
+            ->assertStatus(422)->assertJsonValidationErrors(['duration_hours', 'agreed_to_terms']);
+
+        $this->postJson('/api/admin/bookings', array_merge($data, ['agreed_to_terms' => true]))
+            ->assertCreated()
+            ->assertJsonPath('data.booking.status', 'pending')
+            ->assertJsonPath('data.booking.contact_number', '0917 222 3333')
+            ->assertJsonPath('data.booking.activities.0.type', 'created')
+            ->assertJsonPath('data.booking.activities.0.admin_name', $this->admin->name);
+
+        $response = $this->postJson('/api/admin/bookings', array_merge($data, ['agreed_to_terms' => true, 'confirm' => true]))
+            ->assertCreated()
+            ->assertJsonPath('data.booking.status', 'confirmed')
+            ->assertJsonPath('data.booking.activities.0.to_status', 'confirmed');
+
+        $this->assertMatchesRegularExpression('/^KGP-[A-Z0-9]{6}$/', $response->json('data.booking.reference'));
+        $this->assertSame(2, Booking::count());
+        $this->assertNotNull(Booking::latest('id')->first()->terms_accepted_at);
     }
 
     public function test_admin_can_edit_booking_and_add_notes(): void
