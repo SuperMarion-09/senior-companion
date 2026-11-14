@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kaagapay Brand Guidelines</title>
+  <meta name="description" content="How to use the Kaagapay logo, colours, typography, icons and illustrations.">
+  <link rel="icon" href="logos/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/brand.css">
+  <style>
+    .toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding: 0; list-style: none; }
+    .toc a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--text); font-size: 16px; text-decoration: none; }
+    .toc a:hover { background: var(--sage-soft); }
+
+    /* logo versions */
+    .logo-tile { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff; }
+    .logo-tile__stage { display: grid; place-items: center; min-height: 200px; padding: 32px; }
+    .logo-tile__stage img { max-height: 92px; width: auto; }
+    .logo-tile__stage.tall img { max-height: 130px; }
+    .logo-tile__info { padding: 14px 18px 16px; border-top: 1px solid var(--border); font-size: 15px; }
+    .logo-tile__info strong { display: block; font-size: 16px; }
+    .logo-tile__info code { font-size: 13px; }
+    .bg-cream { background: var(--cream); }
+    .bg-white { background: #fff; }
+    .bg-night { background: var(--night); }
+    .bg-sage { background: var(--sage); }
+    .bg-clay { background: var(--clay); }
+    .bg-gold { background: var(--gold); }
+    .wide { grid-column: span 2; }
+    @media (max-width: 640px) { .wide { grid-column: auto; } }
+
+    /* colour */
+    .swatch { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff; }
+    .swatch__chip { display: flex; align-items: flex-end; justify-content: space-between; height: 128px; padding: 14px 16px; font-size: 14px; font-weight: 700; }
+    .swatch__body { padding: 14px 16px 16px; font-size: 15px; }
+    .swatch__name { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; }
+    .swatch__hex { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 15px; font-weight: 700; }
+    .swatch__meta { color: var(--text-muted); font-size: 14px; }
+    .swatch--lg .swatch__chip { height: 180px; }
+    .ratio { display: flex; height: 64px; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); }
+    .ratio span { display: flex; align-items: center; padding: 0 14px; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; }
+    .contrast { width: 100%; border-collapse: collapse; font-size: 16px; }
+    .contrast th, .contrast td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    .contrast td:nth-child(2), .contrast th:nth-child(2) { text-align: right; white-space: nowrap; }
+    .pill { display: inline-block; min-width: 140px; padding: 6px 12px; border-radius: 8px; font-weight: 700; }
+    .pass { color: var(--sage-deep); font-weight: 700; }
+    .warn { color: #7a5000; font-weight: 700; }
+
+    /* typography */
+    .type-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff; }
+    .type-card__specimen { font-size: 4.2rem; line-height: 1; margin: 6px 0 14px; }
+    .serif { font-family: var(--font-heading); font-weight: 600; }
+    .sans { font-family: var(--font-body); }
+    .alphabet { color: var(--text-muted); font-size: 1.05rem; word-break: break-all; }
+    .scale { border-top: 1px solid var(--border); }
+    .scale__row { display: grid; grid-template-columns: 170px 1fr; gap: 18px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .scale__row small { color: var(--text-muted); font-size: 14px; }
+    @media (max-width: 640px) { .scale__row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+    /* spacing */
+    .space-demo { position: relative; display: inline-block; max-width: 100%; padding: 29px; background: repeating-linear-gradient(45deg, rgba(163, 80, 42, 0.07) 0 8px, transparent 8px 16px); border: 2px dashed rgba(163, 80, 42, 0.55); border-radius: 6px; }
+    .space-demo img { display: block; height: 100px; width: auto; max-width: 100%; outline: 1px solid rgba(78, 110, 85, 0.35); background: var(--cream); }
+    .x { position: absolute; display: grid; place-items: center; width: 29px; height: 29px; color: var(--clay); font-family: var(--font-heading); font-weight: 700; font-style: italic; }
+    .x--t { top: 0; left: 50%; transform: translateX(-50%); }
+    .x--b { bottom: 0; left: 50%; transform: translateX(-50%); }
+    .x--l { left: 0; top: 50%; transform: translateY(-50%); }
+    .x--r { right: 0; top: 50%; transform: translateY(-50%); }
+    .x-key { display: flex; align-items: center; gap: 14px; margin-top: 18px; font-size: 16px; }
+    .x-key svg { width: 72px; height: 72px; flex-shrink: 0; }
+    .min-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 28px; }
+    .min-row figure { margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--text-muted); }
+    .min-row figure strong { color: var(--text); font-size: 15px; }
+    .rule { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--clay); }
+    .rule::before, .rule::after { content: ''; flex: 1; height: 1px; background: var(--clay); }
+
+    /* do / don't */
+    .usage { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff; }
+    .usage__stage { position: relative; display: grid; place-items: center; height: 170px; padding: 20px; overflow: hidden; }
+    .usage__stage img { max-height: 54px; width: auto; }
+    .usage__text { display: flex; gap: 10px; align-items: flex-start; padding: 12px 16px 14px; border-top: 1px solid var(--border); font-size: 15px; }
+    .badge { display: grid; place-items: center; flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; color: #fff; font-size: 15px; font-weight: 700; }
+    .badge--do { background: var(--sage); }
+    .badge--dont { background: #a3241b; }
+    .usage--dont .usage__stage::after { content: ''; position: absolute; inset: 10px; border: 3px solid rgba(163, 36, 27, 0.75); border-radius: 12px; pointer-events: none; }
+    .photo { background: linear-gradient(135deg, #c49a6c 0%, #8d6e4f 30%, #e1c79f 55%, #6f8a6c 80%, #d8b98c 100%); }
+    .photo-dark { background: linear-gradient(rgba(20, 28, 25, 0.62), rgba(20, 28, 25, 0.62)), linear-gradient(135deg, #c49a6c 0%, #8d6e4f 30%, #e1c79f 55%, #6f8a6c 80%, #d8b98c 100%); }
+    .busy { background: repeating-linear-gradient(90deg, #e8956b 0 14px, #9dbfa4 14px 28px, #f3d9a4 28px 42px); }
+
+    /* icons */
+    .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
+    .icon-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; font-size: 13px; color: var(--text-muted); text-align: center; }
+    .icon-cell svg { width: 32px; height: 32px; color: var(--sage); }
+    .icon-anatomy { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }
+    .icon-anatomy__grid { position: relative; width: 168px; height: 168px; border-radius: 12px; background-color: #fff; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 7px 7px; border: 1px solid var(--border); }
+    .icon-anatomy__grid svg { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--sage); }
+    .icon-chip { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; }
+    .icon-chip svg { width: 26px; height: 26px; }
+    .illus { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+    .illus__art { padding: 18px; border-radius: var(--radius-lg); background: var(--cream); border: 1px solid var(--border); }
+    .illus-palette { display: flex; gap: 6px; margin: 14px 0; }
+    .illus-palette span { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.06); }
+    @media (max-width: 760px) { .illus, .icon-anatomy { grid-template-columns: minmax(0, 1fr); } }
+
+    .files { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .files th, .files td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    .files code { font-size: 13px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff; }
+  </style>
+</head>
+<body>
+  <header class="deck-nav">
+    <div class="container deck-nav__inner">
+      <a href="index.html" class="deck-nav__brand" aria-label="Kaagapay brand home"><img src="logos/kaagapay-logo-horizontal.svg" alt="Kaagapay"></a>
+      <nav aria-label="Brand pages">
+        <ul class="deck-nav__links">
+          <li><a href="01-logo-concepts.html">1. Logo concepts</a></li>
+          <li><a href="02-brand-identity-preview.html">2. Identity preview</a></li>
+          <li><a href="03-brand-guidelines.html" aria-current="page">3. Brand guidelines</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="deck-hero">
+      <div class="container">
+        <span class="eyebrow">Step 3 of 3 · Version 1.0, November 2026</span>
+        <h1>Kaagapay brand guidelines</h1>
+        <p class="lead">
+          A short guide for staff, designers, printers and developers, so Kaagapay looks warm, trustworthy and the same everywhere.
+          When in doubt, choose the simpler option and keep text large and clear.
+        </p>
+        <ul class="toc">
+          <li><a href="#logos">Logo versions</a></li>
+          <li><a href="#colour">Colour palette</a></li>
+          <li><a href="#type">Typography</a></li>
+          <li><a href="#spacing">Spacing and minimum size</a></li>
+          <li><a href="#usage">Correct and incorrect use</a></li>
+          <li><a href="#icons">Icons and illustration</a></li>
+          <li><a href="#files">Files</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Logos -->
+    <section class="section" id="logos" aria-labelledby="logos-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">1</span>
+          <h2 id="logos-title">Primary and secondary logo versions</h2>
+          <p>The logo is the Magkaagapay mark (a companion and a senior forming one heart) plus the Kaagapay wordmark in Source Serif 4. Always use the supplied files; never retype the name next to the mark.</p>
+        </div>
+
+        <h3 class="sub">Primary logo · horizontal</h3>
+        <p class="text-muted" style="color:var(--text-muted)">The first choice wherever there is room: the website header, emails, documents and signage.</p>
+        <div class="grid grid--2" style="margin-top:16px">
+          <div class="logo-tile"><div class="logo-tile__stage bg-cream"><img src="logos/kaagapay-logo-horizontal.svg" alt="Kaagapay primary logo, full colour"></div><div class="logo-tile__info"><strong>Full colour</strong>On cream, white and light backgrounds · <code>kaagapay-logo-horizontal.svg</code></div></div>
+          <div class="logo-tile"><div class="logo-tile__stage bg-night"><img src="logos/kaagapay-logo-horizontal-reversed.svg" alt="Kaagapay primary logo, reversed"></div><div class="logo-tile__info"><strong>Reversed</strong>On Night Sage and other dark backgrounds · <code>kaagapay-logo-horizontal-reversed.svg</code></div></div>
+        </div>
+
+        <h3 class="sub">Secondary logo · stacked</h3>
+        <p style="color:var(--text-muted)">For square or narrow spaces: the app splash screen, uniforms, ID lanyards, stickers and social cover images.</p>
+        <div class="grid grid--2" style="margin-top:16px">
+          <div class="logo-tile"><div class="logo-tile__stage tall bg-cream"><img src="logos/kaagapay-logo-stacked.svg" alt="Kaagapay stacked logo, full colour"></div><div class="logo-tile__info"><strong>Stacked, full colour</strong><code>kaagapay-logo-stacked.svg</code></div></div>
+          <div class="logo-tile"><div class="logo-tile__stage tall bg-night"><img src="logos/kaagapay-logo-stacked-reversed.svg" alt="Kaagapay stacked logo, reversed"></div><div class="logo-tile__info"><strong>Stacked, reversed</strong><code>kaagapay-logo-stacked-reversed.svg</code></div></div>
+        </div>
+
+        <h3 class="sub">Other versions</h3>
+        <div class="grid grid--4" style="margin-top:16px">
+          <div class="logo-tile wide"><div class="logo-tile__stage bg-white"><img src="logos/kaagapay-logo-tagline.svg" alt="Kaagapay logo with tagline"></div><div class="logo-tile__info"><strong>With tagline</strong>Brochures, posters, the website footer · <code>kaagapay-logo-tagline.svg</code></div></div>
+          <div class="logo-tile"><div class="logo-tile__stage bg-cream"><img src="logos/kaagapay-mark.svg" alt="Kaagapay mark" style="width:104px;height:104px"></div><div class="logo-tile__info"><strong>Mark only</strong>When the name is already nearby · <code>kaagapay-mark.svg</code></div></div>
+          <div class="logo-tile"><div class="logo-tile__stage bg-cream"><img src="logos/favicon.svg" alt="Kaagapay app tile" style="width:96px;height:96px"></div><div class="logo-tile__info"><strong>App tile</strong>App icon, favicon, avatar · <code>kaagapay-app-icon.svg</code></div></div>
+          <div class="logo-tile wide"><div class="logo-tile__stage bg-white"><img src="logos/kaagapay-logo-horizontal-charcoal.svg" alt="Kaagapay one-colour charcoal logo"></div><div class="logo-tile__info"><strong>One colour, charcoal</strong>Black-and-white printing, fax, stamps · <code>kaagapay-logo-horizontal-charcoal.svg</code></div></div>
+          <div class="logo-tile wide"><div class="logo-tile__stage bg-sage"><img src="logos/kaagapay-logo-horizontal-white.svg" alt="Kaagapay one-colour white logo"></div><div class="logo-tile__info"><strong>One colour, white</strong>On Kaagapay Sage, Clay or dark photos · <code>kaagapay-logo-horizontal-white.svg</code></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colour -->
+    <section class="section" id="colour" aria-labelledby="colour-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">2</span>
+          <h2 id="colour-title">Official colour palette</h2>
+          <p>The same colours as the live website. Sage leads, cream gives warmth and space, clay is the human accent, and gold is a small highlight.</p>
+        </div>
+
+        <h3 class="sub">Primary</h3>
+        <div class="grid grid--3">
+          <div class="swatch swatch--lg"><div class="swatch__chip" style="background:#4E6E55;color:#fff"><span>Primary</span><span>Aa 5.7:1</span></div><div class="swatch__body"><div class="swatch__name">Kaagapay Sage</div><div class="swatch__hex">#4E6E55</div><div class="swatch__meta">RGB 78 110 85 · Companion figure, buttons, links, headers</div></div></div>
+          <div class="swatch swatch--lg"><div class="swatch__chip" style="background:#3D5843;color:#fff"><span>Hover / pressed</span><span>Aa 7.9:1</span></div><div class="swatch__body"><div class="swatch__name">Deep Sage</div><div class="swatch__hex">#3D5843</div><div class="swatch__meta">RGB 61 88 67 · Hover states, text on Soft Sage</div></div></div>
+          <div class="swatch swatch--lg"><div class="swatch__chip" style="background:#E7EEE4;color:#3D5843"><span>Tint</span><span>Aa 6.6:1</span></div><div class="swatch__body"><div class="swatch__name">Soft Sage</div><div class="swatch__hex">#E7EEE4</div><div class="swatch__meta">RGB 231 238 228 · Section backgrounds, highlights</div></div></div>
+        </div>
+
+        <h3 class="sub">Secondary and accent</h3>
+        <div class="grid grid--3">
+          <div class="swatch"><div class="swatch__chip" style="background:#A3502A;color:#fff"><span>Secondary</span><span>Aa 5.6:1</span></div><div class="swatch__body"><div class="swatch__name">Warm Clay</div><div class="swatch__hex">#A3502A</div><div class="swatch__meta">RGB 163 80 42 · Senior figure, small accents, labels</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#FBECE4;color:#A3502A"><span>Tint</span><span>Aa 4.9:1</span></div><div class="swatch__body"><div class="swatch__name">Clay Blush</div><div class="swatch__hex">#FBECE4</div><div class="swatch__meta">RGB 251 236 228 · Soft accent backgrounds</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#F3D9A4;color:#2E3333"><span>Accent</span><span>Aa 9.3:1</span></div><div class="swatch__body"><div class="swatch__name">Sunlit Gold</div><div class="swatch__hex">#F3D9A4</div><div class="swatch__meta">RGB 243 217 164 · Senior figure on app tile, sun, small highlights</div></div></div>
+        </div>
+
+        <h3 class="sub">Neutrals and dark mode</h3>
+        <div class="grid grid--4">
+          <div class="swatch"><div class="swatch__chip" style="background:#FBF8F1;color:#2E3333"><span>Background</span></div><div class="swatch__body"><div class="swatch__name">Cream</div><div class="swatch__hex">#FBF8F1</div><div class="swatch__meta">RGB 251 248 241 · Page background</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#2E3333;color:#fff"><span>Text</span><span>12:1</span></div><div class="swatch__body"><div class="swatch__name">Charcoal</div><div class="swatch__hex">#2E3333</div><div class="swatch__meta">RGB 46 51 51 · Headings and body text, wordmark</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#5A605E;color:#fff"><span>Text</span><span>6.1:1</span></div><div class="swatch__body"><div class="swatch__name">Stone</div><div class="swatch__hex">#5A605E</div><div class="swatch__meta">RGB 90 96 94 · Secondary text, captions</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#E6E0D2;color:#2E3333"><span>Lines</span></div><div class="swatch__body"><div class="swatch__name">Linen</div><div class="swatch__hex">#E6E0D2</div><div class="swatch__meta">RGB 230 224 210 · Borders, dividers</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#1F2A27;color:#EEF1EC"><span>Dark background</span></div><div class="swatch__body"><div class="swatch__name">Night Sage</div><div class="swatch__hex">#1F2A27</div><div class="swatch__meta">RGB 31 42 39 · Dark mode, email footer</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#9DBFA4;color:#13201B"><span>On dark</span><span>7.4:1</span></div><div class="swatch__body"><div class="swatch__name">Light Sage</div><div class="swatch__hex">#9DBFA4</div><div class="swatch__meta">RGB 157 191 164 · Companion figure and buttons on dark</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#E8956B;color:#1F2A27"><span>On dark</span><span>6.3:1</span></div><div class="swatch__body"><div class="swatch__name">Light Clay</div><div class="swatch__hex">#E8956B</div><div class="swatch__meta">RGB 232 149 107 · Senior figure on dark</div></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#FFFFFF;color:#2E3333"><span>Surface</span></div><div class="swatch__body"><div class="swatch__name">White</div><div class="swatch__hex">#FFFFFF</div><div class="swatch__meta">Cards, forms, email body</div></div></div>
+        </div>
+
+        <h3 class="sub">How much of each colour</h3>
+        <div class="ratio" role="img" aria-label="Colour proportions: Cream and white 60 percent, Sage 20 percent, Charcoal 10 percent, Clay 6 percent, Gold 4 percent">
+          <span style="flex:60;background:#FBF8F1">Cream and white 60%</span>
+          <span style="flex:20;background:#4E6E55;color:#fff">Sage 20%</span>
+          <span style="flex:10;background:#2E3333;color:#fff">Text 10%</span>
+          <span style="flex:6;background:#A3502A;color:#fff">Clay</span>
+          <span style="flex:4;background:#F3D9A4"></span>
+        </div>
+        <p class="caption">Mostly light and calm. Clay and gold are accents; never use them for large backgrounds behind long text.</p>
+
+        <h3 class="sub">Readable colour pairs</h3>
+        <div class="table-wrap">
+          <table class="contrast">
+            <thead><tr><th scope="col">Pair</th><th scope="col">Contrast</th><th scope="col">Use for</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill" style="background:#FBF8F1;color:#2E3333;border:1px solid #E6E0D2">Charcoal on Cream</span></td><td>12.1 : 1</td><td class="pass">All text</td></tr>
+              <tr><td><span class="pill" style="background:#4E6E55;color:#fff">White on Sage</span></td><td>5.7 : 1</td><td class="pass">All text, buttons</td></tr>
+              <tr><td><span class="pill" style="background:#A3502A;color:#fff">White on Clay</span></td><td>5.6 : 1</td><td class="pass">All text, labels</td></tr>
+              <tr><td><span class="pill" style="background:#FBF8F1;color:#5A605E;border:1px solid #E6E0D2">Stone on Cream</span></td><td>6.1 : 1</td><td class="pass">Secondary text</td></tr>
+              <tr><td><span class="pill" style="background:#1F2A27;color:#9DBFA4">Light Sage on Night</span></td><td>7.4 : 1</td><td class="pass">All text on dark</td></tr>
+              <tr><td><span class="pill" style="background:#4E6E55;color:#F3D9A4">Gold on Sage</span></td><td>4.1 : 1</td><td class="warn">Large text (24px+) and graphics only</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption">Kaagapay serves older readers, so body text should always use a pair of at least 4.5 : 1 (WCAG AA).</p>
+      </div>
+    </section>
+
+    <!-- Typography -->
+    <section class="section" id="type" aria-labelledby="type-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">3</span>
+          <h2 id="type-title">Typography</h2>
+          <p>Two free typefaces (SIL Open Font License), both already used on the website. A friendly serif for headings, and a sans serif designed for low-vision readers for everything else.</p>
+        </div>
+        <div class="grid grid--2">
+          <div class="type-card">
+            <span class="label">Headings and wordmark</span>
+            <div class="type-card__specimen serif">Aa Gg</div>
+            <h3 class="serif" style="font-size:1.6rem">Source Serif 4</h3>
+            <p style="color:var(--text-muted)">SemiBold 600 and Bold 700. Warm and trustworthy, like a well-made letter. Use for headings, quotes and the tagline.</p>
+            <p class="alphabet serif">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 ñ</p>
+          </div>
+          <div class="type-card">
+            <span class="label">Body text and interface</span>
+            <div class="type-card__specimen sans" style="font-weight:700">Aa Gg</div>
+            <h3 class="sans" style="font-size:1.6rem">Atkinson Hyperlegible</h3>
+            <p style="color:var(--text-muted)">Regular 400 and Bold 700. Made by the Braille Institute so letters like I, l and 1 never look alike. Use for paragraphs, buttons, forms and labels.</p>
+            <p class="alphabet sans">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 ñ</p>
+          </div>
+        </div>
+
+        <h3 class="sub">Type scale (website)</h3>
+        <div class="scale">
+          <div class="scale__row"><small>Page title · 38px<br>Source Serif 4 Bold</small><span class="serif" style="font-size:38px;font-weight:700;line-height:1.2">May kasama ka, may kaagapay ka.</span></div>
+          <div class="scale__row"><small>Section heading · 30px<br>Source Serif 4 Bold</small><span class="serif" style="font-size:30px;font-weight:700;line-height:1.25">Our services</span></div>
+          <div class="scale__row"><small>Card heading · 24px<br>Source Serif 4 Bold</small><span class="serif" style="font-size:24px;font-weight:700">Walking Companion</span></div>
+          <div class="scale__row"><small>Lead text · 20px<br>Atkinson Regular</small><span style="font-size:20px">Friendly, trusted companions for errands and appointments.</span></div>
+          <div class="scale__row"><small>Body · 18px (minimum)<br>Atkinson Regular, 1.6 line height</small><span style="font-size:18px">A steady arm and good conversation for a morning walk in the park.</span></div>
+          <div class="scale__row"><small>Small · 16px<br>Captions and labels only</small><span style="font-size:16px;color:var(--text-muted)">Monday to Saturday, 8:00 AM to 6:00 PM</span></div>
+        </div>
+        <div class="grid grid--3" style="margin-top:24px">
+          <div class="card"><h4>Keep it large</h4><p style="font-size:16px">Body text is never smaller than 18px on screens or 12pt in print. Nothing smaller than 16px.</p></div>
+          <div class="card"><h4>Sentence case</h4><p style="font-size:16px">"Book a companion", not "BOOK A COMPANION". Capitals only for short labels like "CONFIRMED".</p></div>
+          <div class="card"><h4>Fallbacks</h4><p style="font-size:16px">Where the fonts can't load (most email apps): Georgia for headings, Arial for text.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="section" id="spacing" aria-labelledby="spacing-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">4</span>
+          <h2 id="spacing-title">Logo spacing and minimum sizes</h2>
+          <p>Give the logo room to breathe, and never show it so small that the two figures blur together.</p>
+        </div>
+        <div class="grid grid--2" style="align-items:center">
+          <div style="text-align:center">
+            <div class="space-demo">
+              <img src="logos/kaagapay-logo-horizontal.svg" alt="Kaagapay logo with its clear space marked">
+              <span class="x x--t">x</span><span class="x x--b">x</span><span class="x x--l">x</span><span class="x x--r">x</span>
+            </div>
+          </div>
+          <div>
+            <h3>Clear space</h3>
+            <p>Keep an empty space of at least <strong>x</strong> on every side of the logo, where <strong>x</strong> is the height of the companion's head plus the gap below it (about a quarter of the mark's height). No text, edges or other logos may enter it.</p>
+            <div class="x-key">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="21" cy="11.5" r="6.5" fill="#4E6E55"/><circle cx="43.5" cy="12.75" r="6" fill="#A3502A"/><path d="M31 57C23.5 51.5 9 42.5 9 32C9 26 13.5 21.5 19.5 21.5C24.5 21.5 29 24.5 31 29.5Z" fill="#4E6E55"/><path d="M33 57C40.5 51.5 55 42.5 55 32C55 26 50.5 21.5 44.5 21.5C39.5 21.5 35 24.5 33 29.5Z" fill="#A3502A"/><path d="M2 5V21.5M0 5H4M0 21.5H4" stroke="#A3502A" stroke-width="1.2"/></svg>
+              <span><strong>x</strong> = head + gap. With the logo 40px tall, as in the website header, x is about 11px.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sub">Minimum sizes</h3>
+        <div class="card">
+          <div class="min-row">
+            <figure><img src="logos/kaagapay-logo-horizontal.svg" alt="" style="width:120px"><span class="rule">120px</span><strong>Horizontal logo</strong>120px wide on screen · 30 mm in print</figure>
+            <figure><img src="logos/kaagapay-logo-stacked.svg" alt="" style="width:72px"><span class="rule">72px</span><strong>Stacked logo</strong>72px wide · 20 mm</figure>
+            <figure><img src="logos/kaagapay-mark.svg" alt="" style="width:24px"><span class="rule">24</span><strong>Mark</strong>24px · 8 mm</figure>
+            <figure><img src="exports/favicon-16.png" alt="" style="width:16px"><span class="rule">16</span><strong>Below 24px</strong>Use the favicon tile only</figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Usage -->
+    <section class="section" id="usage" aria-labelledby="usage-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">5</span>
+          <h2 id="usage-title">Correct and incorrect logo use</h2>
+          <p>Use the supplied files exactly as they are. If a background makes the logo hard to read, change the logo version, not the logo.</p>
+        </div>
+
+        <h3 class="sub">Do</h3>
+        <div class="grid grid--4">
+          <div class="usage"><div class="usage__stage bg-cream"><img src="logos/kaagapay-logo-horizontal.svg" alt=""></div><div class="usage__text"><span class="badge badge--do">✓</span>Full colour on cream or white</div></div>
+          <div class="usage"><div class="usage__stage bg-night"><img src="logos/kaagapay-logo-horizontal-reversed.svg" alt=""></div><div class="usage__text"><span class="badge badge--do">✓</span>Reversed logo on Night Sage</div></div>
+          <div class="usage"><div class="usage__stage bg-sage"><img src="logos/kaagapay-logo-horizontal-white.svg" alt=""></div><div class="usage__text"><span class="badge badge--do">✓</span>White logo on Sage or Clay</div></div>
+          <div class="usage"><div class="usage__stage photo-dark"><img src="logos/kaagapay-logo-horizontal-white.svg" alt=""></div><div class="usage__text"><span class="badge badge--do">✓</span>White logo on a darkened photo</div></div>
+        </div>
+
+        <h3 class="sub">Don't</h3>
+        <div class="grid grid--4">
+          <div class="usage usage--dont"><div class="usage__stage bg-cream"><img src="logos/kaagapay-logo-horizontal.svg" alt="" style="transform:scaleX(1.4);max-height:40px"></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't stretch or squash it</div></div>
+          <div class="usage usage--dont"><div class="usage__stage bg-cream"><img src="logos/kaagapay-logo-horizontal.svg" alt="" style="filter:hue-rotate(160deg) saturate(1.6)"></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't change the colours</div></div>
+          <div class="usage usage--dont"><div class="usage__stage bg-cream"><img src="logos/kaagapay-logo-horizontal.svg" alt="" style="transform:rotate(-14deg)"></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't rotate or tilt it</div></div>
+          <div class="usage usage--dont"><div class="usage__stage bg-cream"><img src="logos/kaagapay-logo-horizontal.svg" alt="" style="filter:drop-shadow(4px 5px 3px rgba(0,0,0,0.5))"></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't add shadows, glows or outlines</div></div>
+          <div class="usage usage--dont"><div class="usage__stage bg-night"><img src="logos/kaagapay-logo-horizontal.svg" alt=""></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't use full colour on dark backgrounds</div></div>
+          <div class="usage usage--dont"><div class="usage__stage busy"><img src="logos/kaagapay-logo-horizontal.svg" alt=""></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't place it on busy patterns or photos</div></div>
+          <div class="usage usage--dont"><div class="usage__stage bg-cream"><div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--font-body);font-weight:700;font-size:30px;color:#2e3333">Kaagapay</span><img src="logos/kaagapay-mark.svg" alt="" style="height:40px"></div></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't retype the name, change the font or rearrange the parts</div></div>
+          <div class="usage usage--dont"><div class="usage__stage bg-cream"><div style="display:flex;align-items:center;gap:6px"><img src="logos/kaagapay-mark.svg" alt="" style="height:30px;transform:scaleX(-1)"><img src="logos/kaagapay-wordmark.svg" alt="" style="height:44px"></div></div><div class="usage__text"><span class="badge badge--dont">✕</span>Don't flip the mark or resize the mark and name separately</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Icons and illustration -->
+    <section class="section" id="icons" aria-labelledby="icons-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">6</span>
+          <h2 id="icons-title">Iconography and illustration style</h2>
+          <p>Simple, friendly and never clinical. Icons and illustrations help people find their way; they always come with a clear text label.</p>
+        </div>
+
+        <h3 class="sub">Icons</h3>
+        <div class="icon-anatomy card" style="margin-bottom:20px">
+          <div class="icon-anatomy__grid"><svg><use href="assets/icons.svg#hand-heart"/></svg></div>
+          <div>
+            <ul class="checklist">
+              <li><strong>Line icons on a 24 × 24 grid</strong> with a 2px stroke and rounded ends and corners: the same set as the website (<code>Icon.js</code>).</li>
+              <li><strong>Shown at 20–32px</strong>, in Sage, Clay or the text colour. Never smaller than 20px.</li>
+              <li><strong>Always next to a word.</strong> An icon alone can be misread, especially by older users.</li>
+              <li><strong>Everyday objects, not medical ones.</strong> Calendars, bags, footprints and hands; no pills, syringes or crosses, because Kaagapay is non-medical.</li>
+              <li>For feature tiles, place the icon in a rounded square of Soft Sage or Clay Blush.</li>
+            </ul>
+            <div style="display:flex;gap:10px;margin-top:14px">
+              <span class="icon-chip" style="background:var(--sage-soft);color:var(--sage)"><svg><use href="assets/icons.svg#footprints"/></svg></span>
+              <span class="icon-chip" style="background:var(--clay-soft);color:var(--clay)"><svg><use href="assets/icons.svg#shopping-bag"/></svg></span>
+              <span class="icon-chip" style="background:var(--sage);color:#fff"><svg><use href="assets/icons.svg#calendar-check"/></svg></span>
+              <span class="icon-chip" style="background:var(--night);color:var(--sage-light)"><svg><use href="assets/icons.svg#chat"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="icon-grid">
+          <div class="icon-cell"><svg><use href="assets/icons.svg#clipboard"/></svg>Errand</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#shopping-bag"/></svg>Shopping</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#footprints"/></svg>Walking</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#calendar-check"/></svg>Appointment</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#chat"/></svg>Social</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#hand-heart"/></svg>Assistance</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#shield"/></svg>Safety</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#users"/></svg>Family</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#phone"/></svg>Call</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#map-pin"/></svg>Location</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#clock"/></svg>Time</div>
+          <div class="icon-cell"><svg><use href="assets/icons.svg#check-circle"/></svg>Confirmed</div>
+        </div>
+
+        <h3 class="sub">Illustration</h3>
+        <div class="illus">
+          <div class="illus__art"><img src="assets/hero-illustration.svg" alt="The website's hero illustration: an elderly Filipina with a cane walks arm in arm with a young companion carrying her shopping bag."></div>
+          <div>
+            <p>The homepage illustration sets the style for any new drawings.</p>
+            <ul class="checklist">
+              <li><strong>Flat shapes, rounded forms,</strong> no outlines and no gradients.</li>
+              <li><strong>Brand colours plus warm skin tones</strong> that reflect Filipino families.</li>
+              <li><strong>Show seniors as active and capable:</strong> walking, shopping, laughing, choosing. The companion stands beside them, never over them.</li>
+              <li><strong>Everyday Filipino settings:</strong> palengke, park, church, barangay hall, merienda at home.</li>
+              <li><strong>Avoid</strong> hospital scenes, wheelchairs as the main subject, sad or lonely moods, and clip-art.</li>
+              <li><strong>Photos:</strong> real Kaagapay companions and clients, only with written consent, in natural light.</li>
+            </ul>
+            <div class="illus-palette" aria-label="Illustration palette">
+              <span style="background:#4E6E55"></span><span style="background:#7D9A7F"></span><span style="background:#E7EEE4"></span><span style="background:#A3502A"></span><span style="background:#C97B5B"></span><span style="background:#F3D9A4"></span><span style="background:#B98058"></span><span style="background:#9A6544"></span><span style="background:#3F4A4A"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Files -->
+    <section class="section" id="files" aria-labelledby="files-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">7</span>
+          <h2 id="files-title">Which file to use</h2>
+          <p>Everything lives in the <code>branding/</code> folder of the project. Use SVG where possible; PNG for email and social media.</p>
+        </div>
+        <div class="table-wrap">
+          <table class="files">
+            <thead><tr><th scope="col">For</th><th scope="col">File</th></tr></thead>
+            <tbody>
+              <tr><td>Website header, documents</td><td><code>logos/kaagapay-logo-horizontal.svg</code> (dark: <code>-reversed.svg</code>)</td></tr>
+              <tr><td>Square spaces, uniforms</td><td><code>logos/kaagapay-logo-stacked.svg</code></td></tr>
+              <tr><td>Browser tab</td><td><code>exports/favicon.ico</code>, <code>logos/favicon.svg</code>, <code>exports/apple-touch-icon-180.png</code></td></tr>
+              <tr><td>App stores</td><td><code>exports/app-icon-1024.png</code> (iOS), <code>exports/android-icon-512.png</code>, Android adaptive layers <code>logos/kaagapay-android-foreground.svg</code> and <code>-background.svg</code></td></tr>
+              <tr><td>Social media</td><td><code>exports/social-avatar-800.png</code>, post templates in <code>templates/</code></td></tr>
+              <tr><td>Email</td><td><code>templates/booking-confirmation-email.html</code>, <code>templates/email-signature.html</code>, logos in <code>exports/*@2x.png</code></td></tr>
+              <tr><td>Black-and-white print</td><td><code>logos/kaagapay-logo-horizontal-charcoal.svg</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="deck-footer">
+    <div class="container deck-footer__inner">
+      <span>Kaagapay brand guidelines · Version 1.0</span>
+      <span>Questions about the brand? Ask the Kaagapay office before making new versions of the logo.</span>
+    </div>
+  </footer>
+</body>
+</html>
