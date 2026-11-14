@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import BookingTable from '../components/BookingTable';
 import Button from '../components/Button';
 import EmptyState from '../components/EmptyState';
+import DateInput from '../components/DateInput';
 import FormInput from '../components/FormInput';
 import FormSelect from '../components/FormSelect';
 import LoadError from '../components/LoadError';
@@ -103,17 +104,17 @@ export default function AdminBookingsPage() {
             value={params.status || ''}
             onChange={(event) => update({ status: event.target.value })}
           />
-          <FormInput
+          <DateInput
             id="date_from"
             label="Booking date from"
-            type="date"
+            clearable
             value={params.date_from || ''}
             onChange={(event) => update({ date_from: event.target.value })}
           />
-          <FormInput
+          <DateInput
             id="date_to"
             label="Booking date to"
-            type="date"
+            clearable
             min={params.date_from || undefined}
             value={params.date_to || ''}
             onChange={(event) => update({ date_to: event.target.value })}

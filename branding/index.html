@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kaagapay Brand Identity</title>
+  <meta name="description" content="Kaagapay brand identity: logo concepts, identity preview and brand guidelines.">
+  <link rel="icon" href="logos/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/brand.css">
+  <style>
+    .cover { padding: 72px 0 48px; }
+    .cover__logo { width: min(420px, 80%); margin-bottom: 28px; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-bottom: 72px; }
+    .step { display: flex; flex-direction: column; gap: 10px; padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow); color: var(--text); text-decoration: none; font-weight: 400; transition: transform 0.15s ease; }
+    .step:hover { transform: translateY(-3px); color: var(--text); border-color: var(--sage); }
+    .step__num { font-family: var(--font-heading); font-size: 2.4rem; font-weight: 700; color: var(--clay); line-height: 1; }
+    .step h2 { font-size: 1.4rem; margin: 0; }
+    .step p { color: var(--text-muted); font-size: 16px; }
+    .step span:last-child { margin-top: auto; color: var(--sage); font-weight: 700; }
+    @media (max-width: 860px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="cover">
+      <img class="cover__logo" src="logos/kaagapay-logo-tagline.svg" alt="Kaagapay. May kasama ka, may kaagapay ka.">
+      <span class="eyebrow">Brand identity · November 2026</span>
+      <h1>A companion beside every senior</h1>
+      <p class="lead">Five logo concepts compared, the recommended identity shown across the website, app, social media and email, and simple guidelines for using it.</p>
+    </section>
+    <nav class="steps" aria-label="Brand pages">
+      <a class="step" href="01-logo-concepts.html"><span class="step__num">1</span><h2>Logo concepts</h2><p>Five directions, each shown large, small and on dark, scored against the brief.</p><span>Compare the concepts →</span></a>
+      <a class="step" href="02-brand-identity-preview.html"><span class="step__num">2</span><h2>Identity preview</h2><p>The recommended Magkaagapay logo on the website, app, favicon, social media and booking emails.</p><span>See it in use →</span></a>
+      <a class="step" href="03-brand-guidelines.html"><span class="step__num">3</span><h2>Brand guidelines</h2><p>Logo versions, colours, typography, spacing, do's and don'ts, icons and illustration.</p><span>Read the guidelines →</span></a>
+    </nav>
+  </main>
+</body>
+</html>

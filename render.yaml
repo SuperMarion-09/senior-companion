@@ -1,0 +1,83 @@
+# Render Blueprint: creates the Laravel API as a free Docker web service.
+# Render dashboard → New → Blueprint → choose this repository.
+# Values marked "sync: false" are asked for when the Blueprint is created
+# (and can be changed later under the service's Environment tab).
+# Step-by-step guide: README.md → "Deploying (free)".
+
+services:
+  - type: web
+    name: kaagapay-api
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    autoDeploy: true
+    envVars:
+      - key: APP_NAME
+        value: Kaagapay
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      # Create with: php artisan key:generate --show   (starts with "base64:")
+      - key: APP_KEY
+        sync: false
+      # Your Vercel address, e.g. https://kaagapay.vercel.app
+      - key: APP_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      # The Vercel address without https://, e.g. kaagapay.vercel.app
+      - key: SANCTUM_STATEFUL_DOMAINS
+        sync: false
+
+      - key: BUSINESS_TIMEZONE
+        value: Asia/Manila
+      - key: KAAGAPAY_CONTACT_PHONE
+        sync: false
+      - key: KAAGAPAY_CONTACT_EMAIL
+        sync: false
+
+      # Login cookies are only sent over HTTPS.
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      # No background worker runs on the free plan, so nothing is queued.
+      - key: QUEUE_CONNECTION
+        value: sync
+      # Render shows the container output under "Logs".
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
+
+      # Free MySQL from TiDB Cloud or Aiven (see README).
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      # Connect over TLS using the system certificates (works for TiDB Cloud).
+      # For Aiven, also add MYSQL_SSL_CA_PEM with the text of Aiven's CA certificate.
+      - key: MYSQL_ATTR_SSL_CA
+        value: /etc/ssl/certs/ca-certificates.crt
+
+      # Emails are written to the log until a mail service is set up (see README).
+      - key: MAIL_MAILER
+        value: log
+      - key: MAIL_FROM_ADDRESS
+        value: hello@kaagapay.example
+      - key: MAIL_FROM_NAME
+        value: Kaagapay

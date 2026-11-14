@@ -1,0 +1,19 @@
+# Keep secrets, local caches and dev-only files out of the Docker image.
+.env
+.env.*
+!.env.example
+vendor/
+node_modules/
+tests/
+phpunit.xml
+.phpunit.cache
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/pail
+bootstrap/cache/*.php
+.git
+.claude
+.DS_Store
+**/._*

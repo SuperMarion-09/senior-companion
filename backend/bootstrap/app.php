@@ -21,6 +21,13 @@ return Application::configure(basePath: dirname(__DIR__))
         // Lets the React app (listed in SANCTUM_STATEFUL_DOMAINS) log in with
         // secure session cookies + CSRF protection instead of storing tokens.
         $middleware->statefulApi();
+
+        // In production, requests reach Laravel through proxies (Vercel's
+        // rewrite, then Render's load balancer). Trusting them lets Laravel
+        // see HTTPS and the visitor's real IP, so the per-IP rate limits in
+        // AppServiceProvider count each family separately instead of
+        // lumping every visitor together under the proxy's address.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

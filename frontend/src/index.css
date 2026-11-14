@@ -247,11 +247,14 @@ code {
 
 /* --------------------------------------------------------------- 4. Layouts */
 
-/* Brand (logo + name), used in both layouts */
+/* Brand (the Kaagapay logo), used in both layouts. The logo needs clear
+   space of about a quarter of its height on every side and must stay at
+   least 120px wide (branding/03-brand-guidelines.html). */
 .brand {
   display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
   color: var(--color-text);
   text-decoration: none;
 }
@@ -260,32 +263,29 @@ code {
   color: var(--color-text);
 }
 
-.brand__mark {
-  display: grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius);
-  background: var(--color-primary);
-  color: #ffffff;
+.brand__logo {
+  display: block;
+  width: auto;
+  height: 40px;
 }
 
-.brand__text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-
-.brand__name {
-  font-family: var(--font-heading);
-  font-size: var(--text-xl);
-}
-
+/* Lines up under the wordmark, not under the mark */
 .brand__sub {
+  padding-left: 44px;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-weight: 400;
+  line-height: 1.2;
+}
+
+@media (max-width: 400px) {
+  .brand__logo {
+    height: 34px;
+  }
+
+  .brand__sub {
+    padding-left: 37px;
+  }
 }
 
 /* Public layout */
@@ -824,7 +824,7 @@ code {
 }
 
 .form-field__hint {
-  margin: calc(-1 * var(--space-1)) 0 var(--space-2);
+  margin: var(--space-2) 0 0;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
@@ -913,6 +913,202 @@ select.input {
 
 .input-group__toggle:hover {
   background: var(--color-primary-soft);
+}
+
+/* Date field with a calendar popover (DateInput) */
+.date-picker {
+  position: relative;
+}
+
+.date-picker__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  text-align: left;
+  cursor: pointer;
+}
+
+.date-picker__trigger:hover {
+  border-color: var(--color-text-muted);
+}
+
+.date-picker__trigger[aria-expanded='true'] {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+
+.date-picker__trigger--empty .date-picker__value {
+  color: var(--color-text-muted);
+}
+
+.date-picker__icon {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.date-picker__popover {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  z-index: 50;
+  width: min(23rem, calc(100vw - 2 * var(--gutter)));
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  animation: date-picker-in 0.14s ease-out;
+}
+
+@media (max-width: 640px) {
+  .date-picker__popover {
+    width: 100%;
+    padding: var(--space-3);
+  }
+}
+
+@keyframes date-picker-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .date-picker__popover {
+    animation: none;
+  }
+}
+
+.date-picker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.date-picker__month {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  letter-spacing: 0;
+}
+
+.date-picker__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.date-picker__nav:hover:not(:disabled) {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-soft);
+}
+
+.date-picker__nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.date-picker__grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.date-picker__weekday {
+  padding-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.date-picker__grid td {
+  padding: 2px;
+  text-align: center;
+}
+
+.date-picker__day {
+  width: 100%;
+  max-width: 44px;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.date-picker__day:hover:not(:disabled) {
+  background: var(--color-primary-soft);
+}
+
+.date-picker__day--outside {
+  color: var(--color-text-muted);
+}
+
+.date-picker__day--today {
+  border-color: var(--color-primary);
+  font-weight: 700;
+}
+
+.date-picker__day--selected,
+.date-picker__day--selected:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.date-picker__day:disabled {
+  color: var(--color-border-strong);
+  opacity: 0.45;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.date-picker__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.date-picker__action {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: none;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.date-picker__action:hover:not(:disabled) {
+  background: var(--color-primary-soft);
+}
+
+.date-picker__action:disabled {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Tones shared by alerts, badges, toasts and dialogs */

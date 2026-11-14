@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Kaagapay social post: tagline</title>
+  <!-- 1080 × 1080 social media post. Edit the text, then export with
+       python3 branding/tools/export_png.py (saves exports/social-post-tagline-1080.png). -->
+  <style>
+    @font-face { font-family: 'Source Serif 4'; font-weight: 600; src: url('../assets/fonts/source-serif-4-latin-600-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Atkinson Hyperlegible'; font-weight: 400; src: url('../assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Atkinson Hyperlegible'; font-weight: 700; src: url('../assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2') format('woff2'); }
+    html, body { margin: 0; background: #fbf8f1; }
+    .post { position: relative; width: 1080px; height: 1080px; overflow: hidden; background: #fbf8f1; font-family: 'Atkinson Hyperlegible', Arial, sans-serif; color: #2e3333; }
+    .arch { position: absolute; right: -170px; bottom: -170px; width: 720px; height: 720px; border-radius: 50%; background: #e7eee4; }
+    .sun { position: absolute; right: 120px; top: 120px; width: 120px; height: 120px; border-radius: 50%; background: #f3d9a4; }
+    .mark { position: absolute; right: 40px; bottom: 40px; width: 400px; height: 400px; }
+    .logo { position: absolute; left: 88px; top: 92px; height: 64px; }
+    .copy { position: absolute; left: 88px; top: 290px; width: 600px; }
+    .kicker { margin: 0 0 22px; color: #a3502a; font-size: 30px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    h1 { margin: 0 0 30px; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 84px; line-height: 1.08; letter-spacing: -0.015em; }
+    h1 span { color: #4e6e55; }
+    p.body { margin: 0; font-size: 33px; line-height: 1.45; color: #5a605e; width: 520px; }
+    .cta { position: absolute; left: 88px; bottom: 88px; display: inline-flex; align-items: center; gap: 16px; padding: 22px 34px; border-radius: 22px; background: #4e6e55; color: #fff; font-size: 32px; font-weight: 700; }
+    .cta small { font-weight: 400; opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <div class="post">
+    <div class="arch"></div>
+    <div class="sun"></div>
+    <img class="mark" src="../logos/kaagapay-mark.svg" alt="">
+    <img class="logo" src="../logos/kaagapay-logo-horizontal.svg" alt="Kaagapay">
+    <div class="copy">
+      <p class="kicker">Senior companion services</p>
+      <h1>May kasama ka, <span>may kaagapay ka.</span></h1>
+      <p class="body">Friendly, non-medical companions for errands, walks, check-ups and merienda with Lolo and Lola.</p>
+    </div>
+    <div class="cta">Book a companion <small>· kaagapay.example</small></div>
+  </div>
+</body>
+</html>

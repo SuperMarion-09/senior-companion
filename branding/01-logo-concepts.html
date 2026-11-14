@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kaagapay Logo Concepts</title>
+  <meta name="description" content="Five logo concepts for Kaagapay, compared side by side, with a recommendation.">
+  <link rel="icon" href="logos/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/brand.css">
+  <style>
+    .concept { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0; overflow: hidden; padding: 0; margin-bottom: 28px; }
+    .concept--recommended { border: 3px solid var(--clay); }
+    .concept__stage { display: grid; gap: 1px; grid-template-rows: 1fr auto; background: var(--border); }
+    .concept__hero { display: grid; place-items: center; min-height: 260px; padding: 32px; background: var(--cream); }
+    .concept__hero img { width: 150px; height: 150px; }
+    .concept__strip { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 1px; }
+    .concept__strip > div { display: grid; place-items: center; gap: 8px; padding: 18px 12px; background: var(--surface); }
+    .concept__strip .is-dark { background: var(--night); }
+    .concept__strip .is-sage { background: var(--sage-soft); }
+    .concept__sizes { display: flex; align-items: flex-end; gap: 14px; }
+    .mini { font-size: 12px; color: var(--text-muted); text-align: center; }
+    .is-dark .mini { color: var(--night-muted); }
+    .lockup { display: flex; align-items: center; gap: 10px; }
+    .lockup img { width: 40px; height: 40px; }
+    .lockup span { font-family: var(--font-heading); font-weight: 600; font-size: 26px; color: var(--text); }
+    .is-dark .lockup span { color: var(--cream); }
+    .concept__body { padding: 28px 32px; }
+    .concept__title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 6px; }
+    .concept__title h3 { margin: 0; font-size: 1.6rem; }
+    .concept__meaning { color: var(--clay); font-weight: 700; margin-bottom: 14px; }
+    .concept__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; }
+    .concept__cols h4 { font-family: var(--font-body); font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .score { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-weight: 700; }
+    .score__bar { flex: 1; height: 10px; border-radius: 999px; background: var(--surface-muted); overflow: hidden; }
+    .score__bar span { display: block; height: 100%; border-radius: inherit; background: var(--sage); }
+    .concept--recommended .score__bar span { background: var(--clay); }
+    @media (max-width: 900px) { .concept { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 560px) { .concept__cols { grid-template-columns: minmax(0, 1fr); } .concept__body { padding: 22px 20px; } .concept__strip { grid-template-columns: 1fr 1fr; } .concept__strip > div:first-child { grid-column: span 2; } }
+
+    .compare-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow); }
+    table.compare { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 16px; }
+    .compare th, .compare td { padding: 14px 16px; border-bottom: 1px solid var(--border); text-align: center; }
+    .compare th:first-child, .compare td:first-child { text-align: left; }
+    .compare thead th { background: var(--surface-muted); font-size: 15px; vertical-align: bottom; }
+    .compare thead img { width: 40px; height: 40px; margin: 0 auto 6px; }
+    .compare tbody tr:last-child td { border-bottom: 0; font-weight: 700; background: var(--sage-soft); }
+    .compare .rec { background: var(--clay-soft); }
+    .compare tbody tr:last-child td.rec { background: #f6d9c9; }
+    .dots { letter-spacing: 2px; color: var(--sage); white-space: nowrap; }
+    .dots b { color: var(--border); font-weight: 400; }
+
+    .recommend { display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: center; }
+    .recommend img { width: 180px; height: 180px; padding: 22px; border-radius: 28px; background: var(--surface); }
+    @media (max-width: 700px) { .recommend { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <header class="deck-nav">
+    <div class="container deck-nav__inner">
+      <a href="index.html" class="deck-nav__brand" aria-label="Kaagapay brand home"><img src="logos/kaagapay-logo-horizontal.svg" alt="Kaagapay"></a>
+      <nav aria-label="Brand pages">
+        <ul class="deck-nav__links">
+          <li><a href="01-logo-concepts.html" aria-current="page">1. Logo concepts</a></li>
+          <li><a href="02-brand-identity-preview.html">2. Identity preview</a></li>
+          <li><a href="03-brand-guidelines.html">3. Brand guidelines</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="deck-hero">
+      <div class="container">
+        <span class="eyebrow">Step 1 of 3 · Logo exploration</span>
+        <h1>Five logo concepts for Kaagapay</h1>
+        <p class="lead">
+          Each concept uses the website's existing colours (sage, warm clay and cream) and its heading typeface,
+          Source Serif 4, so whichever one is chosen will fit the current site. Every concept is shown large,
+          as a logo, at favicon size and on a dark background, then scored against the brand brief.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="concepts-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">1</span>
+          <h2 id="concepts-title">The concepts</h2>
+          <p>The brief: warm and welcoming, modern and premium, trustworthy, and easy to recognise for older clients and their families.</p>
+        </div>
+
+        <!-- Concept 1 -->
+        <article class="card concept concept--recommended" aria-labelledby="c1">
+          <div class="concept__stage">
+            <div class="concept__hero"><img src="logos/concepts/concept-1-magkaagapay.svg" alt="Two figures, a companion and a senior, whose bodies form one heart"></div>
+            <div class="concept__strip">
+              <div><div class="lockup"><img src="logos/concepts/concept-1-magkaagapay.svg" alt=""><span>Kaagapay</span></div></div>
+              <div class="is-sage"><div class="concept__sizes"><img src="logos/concepts/concept-1-magkaagapay.svg" width="32" height="32" alt=""><img src="logos/concepts/concept-1-magkaagapay.svg" width="16" height="16" alt=""></div><span class="mini">32 · 16 px</span></div>
+              <div class="is-dark"><img src="logos/concepts/concept-1-magkaagapay-reversed.svg" width="56" height="56" alt=""><span class="mini">Dark</span></div>
+            </div>
+          </div>
+          <div class="concept__body">
+            <div class="concept__title"><h3 id="c1">1. Magkaagapay</h3><span class="tag tag--rec">★ Recommended</span></div>
+            <p class="concept__meaning">"Side by side": a companion and a senior who together form one heart.</p>
+            <p>
+              The companion (sage) and the senior (clay) lean toward each other, and their bodies join into a heart.
+              It says exactly what <em>kaagapay</em> means, "the one who walks beside you", without needing words.
+              It also grows out of the heart already used in the website header, so the site stays recognisable.
+            </p>
+            <div class="concept__cols">
+              <div><h4>Strengths</h4><ul class="checklist"><li>Tells the story at a glance: people, care, togetherness</li><li>Natural next step from the current heart mark</li><li>Still reads as a heart at 16px</li><li>Two colours give a warm, human feel</li></ul></div>
+              <div><h4>Watch-outs</h4><ul class="checklist checklist--cons"><li>People-and-heart marks are popular in care brands; the two-tone split and gap make this one distinctive</li><li>Needs the small-size version under 24px</li></ul></div>
+            </div>
+            <div class="score"><span>Brief score</span><span class="score__bar"><span style="width: 93%"></span></span><span>28 / 30</span></div>
+          </div>
+        </article>
+
+        <!-- Concept 2 -->
+        <article class="card concept" aria-labelledby="c2">
+          <div class="concept__stage">
+            <div class="concept__hero"><img src="logos/concepts/concept-2-kapit-bisig.svg" alt="Two interlocking rings in sage and clay"></div>
+            <div class="concept__strip">
+              <div><div class="lockup"><img src="logos/concepts/concept-2-kapit-bisig.svg" alt=""><span>Kaagapay</span></div></div>
+              <div class="is-sage"><div class="concept__sizes"><img src="logos/concepts/concept-2-kapit-bisig.svg" width="32" height="32" alt=""><img src="logos/concepts/concept-2-kapit-bisig.svg" width="16" height="16" alt=""></div><span class="mini">32 · 16 px</span></div>
+              <div class="is-dark"><img src="logos/concepts/concept-2-kapit-bisig-reversed.svg" width="56" height="56" alt=""><span class="mini">Dark</span></div>
+            </div>
+          </div>
+          <div class="concept__body">
+            <div class="concept__title"><h3 id="c2">2. Kapit-Bisig</h3></div>
+            <p class="concept__meaning">"Arm in arm": two linked rings, woven over and under.</p>
+            <p>Two rings hook together like linked arms, a symbol of support and staying close. It is geometric, simple and holds up well when printed or embroidered on uniforms.</p>
+            <div class="concept__cols">
+              <div><h4>Strengths</h4><ul class="checklist"><li>Clean, modern and easy to reproduce</li><li>Good on uniforms, stamps and signage</li></ul></div>
+              <div><h4>Watch-outs</h4><ul class="checklist checklist--cons"><li>Easily read as wedding rings, a bank or a tech company</li><li>Abstract: does not show people or care</li><li>The weave disappears at 16px</li></ul></div>
+            </div>
+            <div class="score"><span>Brief score</span><span class="score__bar"><span style="width: 70%"></span></span><span>21 / 30</span></div>
+          </div>
+        </article>
+
+        <!-- Concept 3 -->
+        <article class="card concept" aria-labelledby="c3">
+          <div class="concept__stage">
+            <div class="concept__hero"><img src="logos/concepts/concept-3-tahanan.svg" alt="A roof sheltering a clay heart"></div>
+            <div class="concept__strip">
+              <div><div class="lockup"><img src="logos/concepts/concept-3-tahanan.svg" alt=""><span>Kaagapay</span></div></div>
+              <div class="is-sage"><div class="concept__sizes"><img src="logos/concepts/concept-3-tahanan.svg" width="32" height="32" alt=""><img src="logos/concepts/concept-3-tahanan.svg" width="16" height="16" alt=""></div><span class="mini">32 · 16 px</span></div>
+              <div class="is-dark"><img src="logos/concepts/concept-3-tahanan-reversed.svg" width="56" height="56" alt=""><span class="mini">Dark</span></div>
+            </div>
+          </div>
+          <div class="concept__body">
+            <div class="concept__title"><h3 id="c3">3. Tahanan</h3></div>
+            <p class="concept__meaning">"Home": a roof sheltering a heart.</p>
+            <p>A soft roofline protects a warm heart: care and safety, like family. It is very easy to understand for every age group.</p>
+            <div class="concept__cols">
+              <div><h4>Strengths</h4><ul class="checklist"><li>Instantly understood, even by first-time visitors</li><li>Strong at small sizes</li></ul></div>
+              <div><h4>Watch-outs</h4><ul class="checklist checklist--cons"><li>Suggests in-home nursing or real estate, but Kaagapay's companions go out with clients (errands, walks, appointments)</li><li>Used by many home-care agencies, so harder to stand out</li></ul></div>
+            </div>
+            <div class="score"><span>Brief score</span><span class="score__bar"><span style="width: 77%"></span></span><span>23 / 30</span></div>
+          </div>
+        </article>
+
+        <!-- Concept 4 -->
+        <article class="card concept" aria-labelledby="c4">
+          <div class="concept__stage">
+            <div class="concept__hero"><img src="logos/concepts/concept-4-dahon.svg" alt="A tall sage leaf growing beside a smaller clay leaf"></div>
+            <div class="concept__strip">
+              <div><div class="lockup"><img src="logos/concepts/concept-4-dahon.svg" alt=""><span>Kaagapay</span></div></div>
+              <div class="is-sage"><div class="concept__sizes"><img src="logos/concepts/concept-4-dahon.svg" width="32" height="32" alt=""><img src="logos/concepts/concept-4-dahon.svg" width="16" height="16" alt=""></div><span class="mini">32 · 16 px</span></div>
+              <div class="is-dark"><img src="logos/concepts/concept-4-dahon-reversed.svg" width="56" height="56" alt=""><span class="mini">Dark</span></div>
+            </div>
+          </div>
+          <div class="concept__body">
+            <div class="concept__title"><h3 id="c4">4. Dahon</h3></div>
+            <p class="concept__meaning">"Leaves": a tall leaf growing beside a smaller one, from the same stem.</p>
+            <p>A strong leaf stands beside a smaller, older one: gentle support and a life still growing. It feels calm and premium, close in mood to a wellness brand.</p>
+            <div class="concept__cols">
+              <div><h4>Strengths</h4><ul class="checklist"><li>The most elegant and premium of the five</li><li>Pairs naturally with the sage palette</li></ul></div>
+              <div><h4>Watch-outs</h4><ul class="checklist checklist--cons"><li>Could be mistaken for a spa, organic food or a pharmacy</li><li>Doesn't show people, so companionship has to be explained</li></ul></div>
+            </div>
+            <div class="score"><span>Brief score</span><span class="score__bar"><span style="width: 73%"></span></span><span>22 / 30</span></div>
+          </div>
+        </article>
+
+        <!-- Concept 5 -->
+        <article class="card concept" aria-labelledby="c5">
+          <div class="concept__stage">
+            <div class="concept__hero"><img src="logos/concepts/concept-5-k-puso.svg" alt="A rounded letter K with a small clay heart between its arms"></div>
+            <div class="concept__strip">
+              <div><div class="lockup"><img src="logos/concepts/concept-5-k-puso.svg" alt=""><span>Kaagapay</span></div></div>
+              <div class="is-sage"><div class="concept__sizes"><img src="logos/concepts/concept-5-k-puso.svg" width="32" height="32" alt=""><img src="logos/concepts/concept-5-k-puso.svg" width="16" height="16" alt=""></div><span class="mini">32 · 16 px</span></div>
+              <div class="is-dark"><img src="logos/concepts/concept-5-k-puso-reversed.svg" width="56" height="56" alt=""><span class="mini">Dark</span></div>
+            </div>
+          </div>
+          <div class="concept__body">
+            <div class="concept__title"><h3 id="c5">5. K-Puso</h3></div>
+            <p class="concept__meaning">"K with a heart": a rounded K monogram that holds a heart.</p>
+            <p>A friendly, rounded letter K with a small heart held between its arms. It works as a monogram on uniforms, ID lanyards and app icons.</p>
+            <div class="concept__cols">
+              <div><h4>Strengths</h4><ul class="checklist"><li>Builds recognition of the name's first letter</li><li>Bold, simple monogram</li></ul></div>
+              <div><h4>Watch-outs</h4><ul class="checklist checklist--cons"><li>Letter monograms say little about the service</li><li>The heart is lost at 16px</li><li>Feels more corporate than warm</li></ul></div>
+            </div>
+            <div class="score"><span>Brief score</span><span class="score__bar"><span style="width: 63%"></span></span><span>19 / 30</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="compare-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__num">2</span>
+          <h2 id="compare-title">Side-by-side comparison</h2>
+          <p>Each concept is scored from 1 to 5 on the six points of the brief.</p>
+        </div>
+        <div class="compare-wrap">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th scope="col">Criterion</th>
+                <th scope="col" class="rec"><img src="logos/concepts/concept-1-magkaagapay.svg" alt="">1. Magkaagapay</th>
+                <th scope="col"><img src="logos/concepts/concept-2-kapit-bisig.svg" alt="">2. Kapit-Bisig</th>
+                <th scope="col"><img src="logos/concepts/concept-3-tahanan.svg" alt="">3. Tahanan</th>
+                <th scope="col"><img src="logos/concepts/concept-4-dahon.svg" alt="">4. Dahon</th>
+                <th scope="col"><img src="logos/concepts/concept-5-k-puso.svg" alt="">5. K-Puso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Says "companionship" without words</th><td class="rec"><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td></tr>
+              <tr><th scope="row">Warm and welcoming</th><td class="rec"><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td></tr>
+              <tr><th scope="row">Modern and premium</th><td class="rec"><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td></tr>
+              <tr><th scope="row">Clear for elderly clients and families</th><td class="rec"><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td></tr>
+              <tr><th scope="row">Works small (favicon, app icon)</th><td class="rec"><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td></tr>
+              <tr><th scope="row">Fits the current website</th><td class="rec"><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="3 of 5">●●●<b>●●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td><td><span class="dots" aria-label="4 of 5">●●●●<b>●</b></span></td></tr>
+              <tr><td>Total</td><td class="rec">28 / 30</td><td>21 / 30</td><td>23 / 30</td><td>22 / 30</td><td>19 / 30</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="rec-title">
+      <div class="container">
+        <div class="panel panel--sage recommend">
+          <img src="logos/kaagapay-mark.svg" alt="The Magkaagapay mark">
+          <div>
+            <span class="eyebrow" style="color: #ffffff">Recommendation</span>
+            <h2 id="rec-title">Concept 1, Magkaagapay</h2>
+            <p>
+              It is the only concept that shows the service itself: a person walking beside an older person, with care at the centre.
+              Families get it at a glance, older clients see people and a heart rather than an abstract symbol, and it develops the heart
+              already in the website header, so returning visitors still recognise Kaagapay.
+            </p>
+            <p style="margin-top: 20px"><a class="btn btn--secondary" href="02-brand-identity-preview.html">See the identity preview →</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="deck-footer">
+    <div class="container deck-footer__inner">
+      <span>Kaagapay brand identity · Logo concepts</span>
+      <span>Concept files: <code>branding/logos/concepts/</code></span>
+    </div>
+  </footer>
+</body>
+</html>

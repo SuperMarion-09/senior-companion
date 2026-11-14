@@ -518,3 +518,112 @@ cd frontend && npm run clean:mac
 
 The permanent fix is to keep the project on your Mac's internal disk (or an
 APFS-formatted drive).
+
+---
+
+## 10. Deploying for free (Vercel + Render + TiDB Cloud)
+
+| Part | Free host | Files in this repo |
+| ---- | --------- | ------------------ |
+| React website | **Vercel** | `frontend/vercel.json` |
+| Laravel API | **Render** (Docker web service, free plan) | `render.yaml`, `backend/Dockerfile`, `backend/docker/` |
+| MySQL | **TiDB Cloud** Starter (MySQL-compatible), or **Aiven** free MySQL | – |
+
+**How it fits together.** Visitors only ever open the Vercel address. Vercel
+passes `/api/*` and `/sanctum/*` on to the Laravel API on Render (see
+`frontend/vercel.json`), so the browser sees one site and the admin login
+cookie works. Without this, `*.vercel.app` and `*.onrender.com` count as two
+different sites and browsers block the cookie, so login fails with 401/419.
+
+**Free plan limits.** Render's free API goes to sleep after about 15 minutes
+without visitors, so the first visit after that takes 30–60 seconds while it wakes up.
+Free plan terms change, so check each provider's pricing page.
+
+### Step 1 – Database (TiDB Cloud)
+
+1. Sign up at tidbcloud.com and create a **Starter** (free) cluster.
+2. Click **Connect**, choose "General" / "MySQL CLI", and create a password.
+3. Note the **host**, **port** (4000), **user** (looks like `xxxx.root`) and
+   password. Create a database named `senior_companion` (in the SQL editor:
+   `CREATE DATABASE senior_companion;`).
+
+*Using Aiven instead?* Create a free MySQL service, then also set
+`MYSQL_SSL_CA_PEM` on Render to the text of Aiven's **CA certificate**
+(Overview → Connection information → CA certificate → copy).
+
+### Step 2 – API (Render)
+
+1. Push this repo to GitHub.
+2. Create an app key on your Mac and copy it (it starts with `base64:`):
+
+   ```bash
+   cd backend && php artisan key:generate --show
+   ```
+
+3. In Render: **New → Blueprint**, pick the repo. Render reads `render.yaml`
+   and asks for the `sync: false` values:
+   - `APP_KEY`: the key from step 2
+   - `APP_URL` and `FRONTEND_URL`: your Vercel address, e.g.
+     `https://kaagapay.vercel.app` (choose the Vercel project name now; you
+     create it in step 3)
+   - `SANCTUM_STATEFUL_DOMAINS`: the same without `https://`, e.g.
+     `kaagapay.vercel.app`
+   - `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`: from step 1
+   - `KAAGAPAY_CONTACT_PHONE`, `KAAGAPAY_CONTACT_EMAIL`: shown in emails
+4. Wait for the deploy to finish. Every start runs `php artisan migrate --force`
+   (see `backend/docker/start.sh`), so the tables are created automatically.
+5. Open `https://<your-service>.onrender.com/api/health` to check it.
+   If Render gave the service a different address than
+   `kaagapay-api.onrender.com`, put that address in both rewrites in
+   `frontend/vercel.json`.
+
+### Step 3 – Website (Vercel)
+
+1. In Vercel: **Add New → Project**, import the repo, set **Root Directory**
+   to `frontend` (Vercel detects Create React App).
+2. Environment variables:
+   - `REACT_APP_API_URL` = your Vercel address, e.g. `https://kaagapay.vercel.app`
+     (the **same** address as the website, not Render's, so requests go through
+     the rewrite)
+   - `REACT_APP_USE_MOCK_BOOKINGS` = `false`
+3. Deploy. If the address Vercel gives you differs from what you entered on Render,
+   update `APP_URL`, `FRONTEND_URL` and `SANCTUM_STATEFUL_DOMAINS` on Render
+   and redeploy, then redeploy on Vercel too (`REACT_APP_*` values are built in).
+
+### Step 4 – Create the first admin
+
+Render's free plan has no shell, so run the command on your Mac, pointed at the
+live database (the values typed here override `backend/.env` for this one command):
+
+```bash
+cd backend && php artisan config:clear
+```
+
+```bash
+DB_HOST=<host> DB_PORT=4000 DB_DATABASE=senior_companion DB_USERNAME=<user> DB_PASSWORD='<password>' MYSQL_ATTR_SSL_CA=/etc/ssl/cert.pem php artisan admin:create
+```
+
+(For Aiven, save its CA certificate as a file and point `MYSQL_ATTR_SSL_CA` at it.)
+
+### Step 5 – Check it
+
+1. Make a booking on the live site and look it up on the status page.
+2. Log in at the admin page and confirm the booking is listed.
+
+### Sending real emails (optional)
+
+Until you do this, emails to families are only written to Render's **Logs**.
+Sign up for a free email service (e.g. Resend or Brevo), verify a sender address
+or domain, then on Render set `MAIL_MAILER=smtp` and `MAIL_HOST`, `MAIL_PORT`,
+`MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS` from that service.
+
+### Deploying changes
+
+Push to GitHub. Render and Vercel each rebuild automatically.
+
+| Problem on the live site | Fix |
+| ------------------------ | --- |
+| First page load is slow, then fine | The free Render service was asleep. Normal on the free plan. |
+| Login returns **401/419** | `SANCTUM_STATEFUL_DOMAINS` must be the Vercel address without `https://`, and `REACT_APP_API_URL` must be the Vercel address (not Render's). Redeploy both after changing. |
+| API calls return Vercel's 404 page | The Render address in `frontend/vercel.json` is wrong. |
+| Render deploy fails at `migrate` | Check the `DB_*` values. TiDB needs port 4000 and the full `xxxx.root` user name. |

@@ -5,6 +5,7 @@ import { createBooking, updateBooking } from '../services/adminService';
 import { DURATION_OPTIONS, START_TIME_OPTIONS } from '../utils/booking';
 import Alert from './Alert';
 import Button from './Button';
+import DateInput from './DateInput';
 import FormCheckbox from './FormCheckbox';
 import FormInput from './FormInput';
 import PhoneInput from './PhoneInput';
@@ -117,7 +118,7 @@ export default function BookingEditForm({ booking, onSaved, onCancel }) {
         <legend className="form-section__legend">Service</legend>
         <div className="form-row">
           <FormSelect {...field('service_type')} label="Service type" options={SERVICE_OPTIONS} placeholder="Choose…" />
-          <FormInput {...field('booking_date')} label="Booking date" type="date" />
+          <DateInput {...field('booking_date')} label="Booking date" />
           <FormSelect {...field('start_time')} label="Start time" options={START_TIME_OPTIONS} placeholder="Choose…" />
           <FormSelect
             {...field('duration_hours')}
