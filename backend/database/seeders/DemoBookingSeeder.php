@@ -20,7 +20,7 @@ class DemoBookingSeeder extends Seeder
             ['Lola Nena Reyes', 'Carla Reyes', '0927 555 1212', 'shopping'],
             ['Lolo Ramon Dela Cruz', 'Joy Dela Cruz', '0905 777 8899', 'social'],
             ['Lola Corazon Bautista', 'Paolo Bautista', '0919 333 4455', 'errand'],
-            ['Lolo Ernesto Garcia', 'Liza Garcia', '(02) 8123 4567', 'general'],
+            ['Lolo Ernesto Garcia', 'Liza Garcia', '0928 812 3456', 'general'],
         ];
 
         // [family index, days from today, start time, status]

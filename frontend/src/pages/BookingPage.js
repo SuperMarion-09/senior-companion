@@ -4,6 +4,7 @@ import Alert from '../components/Alert';
 import Button from '../components/Button';
 import FormCheckbox from '../components/FormCheckbox';
 import FormInput from '../components/FormInput';
+import PhoneInput from '../components/PhoneInput';
 import FormSelect from '../components/FormSelect';
 import FormTextarea from '../components/FormTextarea';
 import Icon from '../components/Icon';
@@ -18,10 +19,12 @@ import {
   DURATION_OPTIONS,
   EMPTY_BOOKING,
   MAX_DAYS_AHEAD,
-  START_TIME_OPTIONS,
+  MIN_NOTICE_HOURS,
+  firstBookableDate,
   formatDate,
   formatDuration,
   formatTime,
+  startTimeOptionsFor,
   toIsoDate,
   validateBooking,
   validateBookingStep,
@@ -111,6 +114,8 @@ export default function BookingPage() {
   const today = new Date();
   const latestDate = new Date(today);
   latestDate.setDate(latestDate.getDate() + MAX_DAYS_AHEAD);
+  // Times less than MIN_NOTICE_HOURS from now are left out of the list.
+  const startTimeOptions = startTimeOptionsFor(form.bookingDate, today);
   const selectedService = SERVICES.find((service) => service.value === form.serviceType);
 
   const handleChange = (event) => {
@@ -215,13 +220,10 @@ export default function BookingPage() {
                 <legend className="form-section__legend">Family contact person</legend>
                 <p className="form-section__hint">The person we will call to confirm the booking.</p>
                 <FormInput {...field('contactPersonName')} label="Contact person’s full name" autoComplete="name" />
-                <FormInput
+                <PhoneInput
                   {...field('contactNumber')}
                   label="Contact number"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  hint="For example 0917 123 4567. You will need this number to check your booking."
+                  hint="11 digits, for example 09171234567. You will need this number to check your booking."
                 />
                 <FormInput
                   {...field('email')}
@@ -237,13 +239,11 @@ export default function BookingPage() {
                 <legend className="form-section__legend">Emergency contact</legend>
                 <p className="form-section__hint">Someone we can reach right away if something happens during the visit.</p>
                 <FormInput {...field('emergencyContactName')} label="Emergency contact’s full name" autoComplete="off" />
-                <FormInput
+                <PhoneInput
                   {...field('emergencyContactNumber')}
                   label="Emergency contact number"
-                  type="tel"
-                  inputMode="tel"
                   autoComplete="off"
-                  hint="For example 0918 765 4321"
+                  hint="11 digits, for example 09187654321"
                 />
               </fieldset>
             </>
@@ -259,14 +259,25 @@ export default function BookingPage() {
 
               <fieldset className="form-section">
                 <legend className="form-section__legend">Date and time</legend>
-                <FormInput {...field('bookingDate')} label="Date of service" type="date" min={toIsoDate(today)} max={toIsoDate(latestDate)} />
+                <FormInput
+                  {...field('bookingDate')}
+                  label="Date of service"
+                  type="date"
+                  min={firstBookableDate(today)}
+                  max={toIsoDate(latestDate)}
+                  hint={`Please book at least ${MIN_NOTICE_HOURS} hours ahead`}
+                />
                 <div className="form-row">
                   <FormSelect
                     {...field('startTime')}
                     label="Start time"
-                    options={START_TIME_OPTIONS}
-                    placeholder="Choose a time…"
-                    hint={`Between ${START_TIME_OPTIONS[0].label} and ${START_TIME_OPTIONS.at(-1).label}`}
+                    options={startTimeOptions}
+                    placeholder={startTimeOptions.length ? 'Choose a time…' : 'No times left on this date'}
+                    hint={
+                      startTimeOptions.length
+                        ? `Between ${startTimeOptions[0].label} and ${startTimeOptions.at(-1).label}`
+                        : 'Please choose another date'
+                    }
                   />
                   <FormSelect
                     {...field('durationHours')}

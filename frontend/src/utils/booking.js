@@ -9,6 +9,8 @@ import { SERVICES } from '../content/siteContent';
 export const MIN_DURATION_HOURS = 3;
 export const MAX_DURATION_HOURS = 10;
 export const MAX_DAYS_AHEAD = 180;
+// A booking must start at least this many hours from now.
+export const MIN_NOTICE_HOURS = 6;
 
 // Earliest and latest start time a family can pick (24-hour clock).
 const FIRST_START_HOUR = 7;
@@ -112,9 +114,22 @@ export function normalizePhone(value) {
   return digits.startsWith('63') ? `0${digits.slice(2)}` : digits;
 }
 
-/** Philippine mobile (09XX XXX XXXX) or landline with area code (e.g. 02 8123 4567). */
+/** A Philippine mobile number has 11 digits: 09XX XXX XXXX. */
+export const PHONE_LENGTH = 11;
+
+/** Philippine mobile number: 09 followed by 9 digits (e.g. 0917 123 4567 or +63 917 123 4567). */
 export function isValidPhone(value) {
-  return /^(09\d{9}|0[2-8]\d{7,9})$/.test(normalizePhone(value));
+  return /^09\d{9}$/.test(normalizePhone(value));
+}
+
+/**
+ * What a phone field keeps while someone types or pastes: digits only, "+63" turned
+ * into "0", at most 11 digits.
+ */
+export function sanitizePhoneInput(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  const local = digits.startsWith('63') ? `0${digits.slice(2)}` : digits;
+  return local.slice(0, PHONE_LENGTH);
 }
 
 /* ------------------------------------------------------------ Date & time */
@@ -129,6 +144,34 @@ export function toIsoDate(date) {
 function parseIsoDate(value) {
   const [year, month, day] = value.split('-').map(Number);
   return new Date(year, month - 1, day);
+}
+
+function toDateTime(isoDate, time) {
+  const date = parseIsoDate(isoDate);
+  const [hours, minutes] = time.split(':').map(Number);
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+/** The earliest moment a booking made now may start (MIN_NOTICE_HOURS ahead). */
+export function earliestStart(now = new Date()) {
+  return new Date(now.getTime() + MIN_NOTICE_HOURS * 60 * 60 * 1000);
+}
+
+/** The start times still open on a date, given the notice period. */
+export function startTimeOptionsFor(isoDate, now = new Date()) {
+  if (!isoDate) return START_TIME_OPTIONS;
+  const earliest = earliestStart(now);
+  return START_TIME_OPTIONS.filter((option) => toDateTime(isoDate, option.value) >= earliest);
+}
+
+/** The first date that still has a start time open: today, or tomorrow when today is too late. */
+export function firstBookableDate(now = new Date()) {
+  const today = toIsoDate(now);
+  if (startTimeOptionsFor(today, now).length > 0) return today;
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return toIsoDate(tomorrow);
 }
 
 /** "2026-11-10" → "Tuesday, 10 November 2026" */
@@ -157,7 +200,7 @@ export function formatDuration(hours) {
 /* ------------------------------------------------------------- Validation */
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_ERROR = 'Please enter a valid Philippine phone number, for example 0917 123 4567.';
+const PHONE_ERROR = 'Please enter a valid Philippine mobile number: 11 digits starting with 09, for example 09171234567.';
 
 function requiredText(value, message, maxLength = 150) {
   const text = String(value || '').trim();
@@ -199,6 +242,9 @@ const RULES = {
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     if (form.bookingDate === toIsoDate(now) && form.startTime <= currentTime) {
       return 'This time has already passed today. Please choose a later time or another date.';
+    }
+    if (form.bookingDate && form.bookingDate >= toIsoDate(now) && toDateTime(form.bookingDate, form.startTime) < earliestStart(now)) {
+      return `Bookings need at least ${MIN_NOTICE_HOURS} hours’ notice. Please choose a later time or another date.`;
     }
     return null;
   },

@@ -5,6 +5,7 @@ import { isValidPhone } from '../utils/booking';
 import Alert from './Alert';
 import Button from './Button';
 import FormInput from './FormInput';
+import PhoneInput from './PhoneInput';
 import FormTextarea from './FormTextarea';
 import MockModeNotice from './MockModeNotice';
 
@@ -16,7 +17,7 @@ function validate(form) {
   if (!form.contactNumber.trim()) {
     errors.contactNumber = 'Please enter a number we can call or text you on.';
   } else if (!isValidPhone(form.contactNumber)) {
-    errors.contactNumber = 'Please enter a valid Philippine phone number, for example 0917 123 4567.';
+    errors.contactNumber = 'Please enter a valid Philippine mobile number: 11 digits starting with 09, for example 09171234567.';
   }
   if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
     errors.email = 'Please enter a valid email address, or leave it empty.';
@@ -84,13 +85,10 @@ export default function ContactForm() {
       )}
 
       <FormInput id="name" label="Your name" autoComplete="name" value={form.name} onChange={handleChange} error={errors.name} />
-      <FormInput
+      <PhoneInput
         id="contactNumber"
         label="Contact number"
-        type="tel"
-        inputMode="tel"
-        autoComplete="tel"
-        hint="For example 0917 123 4567"
+        hint="For example 09171234567"
         value={form.contactNumber}
         onChange={handleChange}
         error={errors.contactNumber}

@@ -71,7 +71,12 @@ export default function AdminBookingsPage() {
       <PageHeader
         eyebrow="Bookings"
         title="Bookings"
-        description="Every booking request sent through the website. Open one to review, confirm or update it."
+        description="Every booking request, from the website or entered by staff. Open one to review, confirm or update it."
+        actions={
+          <Button to="/admin/bookings/new" icon="plus-circle">
+            New booking
+          </Button>
+        }
       />
 
       <section className="card admin-section filters" aria-label="Search and filters">

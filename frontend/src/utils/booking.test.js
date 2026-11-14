@@ -1,4 +1,9 @@
-import { EMPTY_BOOKING, formatTime, isValidPhone, normalizePhone, validateBooking, validateBookingStep } from './booking';
+import {
+  EMPTY_BOOKING,
+  firstBookableDate,
+  formatTime,
+  startTimeOptionsFor,
+  isValidPhone, normalizePhone, sanitizePhoneInput, validateBooking, validateBookingStep } from './booking';
 
 // Saturday 7 November 2026, 10:15 AM
 const NOW = new Date(2026, 10, 7, 10, 15);
@@ -9,7 +14,7 @@ const VALID_BOOKING = {
   contactPersonName: 'Maria Santos',
   contactNumber: '0917 123 4567',
   emergencyContactName: 'Jose Santos',
-  emergencyContactNumber: '(02) 8123 4567',
+  emergencyContactNumber: '0918 765 4321',
   serviceType: 'walking',
   bookingDate: '2026-11-10',
   startTime: '09:00',
@@ -30,12 +35,22 @@ describe('phone numbers', () => {
     expect(normalizePhone('(0917) 123 4567')).toBe('09171234567');
   });
 
-  it('accepts Philippine mobiles and landlines only', () => {
+  it('accepts Philippine mobile numbers only (09 + 9 digits)', () => {
+    expect(isValidPhone('09171234567')).toBe(true);
     expect(isValidPhone('0917 123 4567')).toBe(true);
     expect(isValidPhone('+639171234567')).toBe(true);
-    expect(isValidPhone('02 8123 4567')).toBe(true);
+    expect(isValidPhone('02 8123 4567')).toBe(false);
+    expect(isValidPhone('08171234567')).toBe(false);
+    expect(isValidPhone('091712345678')).toBe(false);
     expect(isValidPhone('12345')).toBe(false);
     expect(isValidPhone('0917 123 456')).toBe(false);
+  });
+
+  it('keeps only digits in a phone field, at most 11', () => {
+    expect(sanitizePhoneInput('0917-abc-123')).toBe('0917123');
+    expect(sanitizePhoneInput('+63 917 123 4567')).toBe('09171234567');
+    expect(sanitizePhoneInput('0917123456789')).toBe('09171234567');
+    expect(sanitizePhoneInput('')).toBe('');
   });
 });
 
@@ -77,6 +92,26 @@ test('rejects past dates, past times today and bookings shorter than 3 hours', (
   expect(validateBookingStep(1, { ...VALID_BOOKING, bookingDate: '2026-11-07', startTime: '09:00' }, NOW).startTime).toMatch(
     /already passed/
   );
-  expect(validateBookingStep(1, { ...VALID_BOOKING, bookingDate: '2026-11-07', startTime: '13:00' }, NOW)).toEqual({});
+  expect(validateBookingStep(1, { ...VALID_BOOKING, bookingDate: '2026-11-07', startTime: '16:30' }, NOW)).toEqual({});
   expect(validateBookingStep(1, { ...VALID_BOOKING, durationHours: '2' }, NOW).durationHours).toMatch(/minimum booking is 3 hours/);
+});
+
+test('same-day bookings need at least 6 hours’ notice', () => {
+  // NOW is 10:15 AM, so 4:15 PM is the earliest start.
+  expect(validateBookingStep(1, { ...VALID_BOOKING, bookingDate: '2026-11-07', startTime: '13:00' }, NOW).startTime).toMatch(
+    /6 hours’ notice/
+  );
+  expect(validateBookingStep(1, { ...VALID_BOOKING, bookingDate: '2026-11-07', startTime: '16:00' }, NOW).startTime).toMatch(
+    /6 hours’ notice/
+  );
+  expect(startTimeOptionsFor('2026-11-07', NOW).map((option) => option.value)).toEqual(['16:30', '17:00']);
+  expect(startTimeOptionsFor('2026-11-08', NOW)).toHaveLength(21);
+});
+
+test('the first bookable date moves to tomorrow once today is too late', () => {
+  expect(firstBookableDate(NOW)).toBe('2026-11-07');
+  expect(firstBookableDate(new Date(2026, 10, 7, 11, 1))).toBe('2026-11-08');
+  expect(validateBookingStep(1, { ...VALID_BOOKING, bookingDate: '2026-11-07', startTime: '17:00' }, new Date(2026, 10, 7, 11, 1)).startTime).toMatch(
+    /6 hours’ notice/
+  );
 });

@@ -7,7 +7,8 @@ function title(activity) {
   const by = activity.admin_name || 'An administrator';
   switch (activity.type) {
     case 'created':
-      return 'Booking requested by the family';
+      // admin_id is only set when staff entered the booking themselves.
+      return activity.admin_name ? `${by} entered the booking` : 'Booking requested by the family';
     case 'status':
       return `${by} changed the status to ${ADMIN_STATUSES[activity.to_status]?.label || activity.to_status}`;
     case 'note':

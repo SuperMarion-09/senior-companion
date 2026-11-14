@@ -30,6 +30,15 @@ export async function getBooking(reference) {
   return response.data.data.booking;
 }
 
+/**
+ * Enters a new booking for a family (phone call, walk-in). `form` uses the
+ * API's snake_case field names plus agreed_to_terms and confirm.
+ */
+export async function createBooking(form) {
+  const response = await api.post('/admin/bookings', form);
+  return { booking: response.data.data.booking, message: response.data.message };
+}
+
 /** Saves the edit form. `form` uses the API's snake_case field names. */
 export async function updateBooking(reference, form) {
   const response = await api.put(`/admin/bookings/${encodeURIComponent(reference)}`, form);
