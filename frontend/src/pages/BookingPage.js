@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Button from '../components/Button';
+import DateInput from '../components/DateInput';
 import FormCheckbox from '../components/FormCheckbox';
 import FormInput from '../components/FormInput';
 import PhoneInput from '../components/PhoneInput';
@@ -259,10 +260,9 @@ export default function BookingPage() {
 
               <fieldset className="form-section">
                 <legend className="form-section__legend">Date and time</legend>
-                <FormInput
+                <DateInput
                   {...field('bookingDate')}
                   label="Date of service"
-                  type="date"
                   min={firstBookableDate(today)}
                   max={toIsoDate(latestDate)}
                   hint={`Please book at least ${MIN_NOTICE_HOURS} hours ahead`}

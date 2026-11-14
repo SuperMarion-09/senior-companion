@@ -21,17 +21,17 @@ export default function FormField({ id, label, hint, error, optional = false, ch
         {label}
         {optional && <span className="form-field__optional"> (optional)</span>}
       </label>
-      {hint && (
-        <p id={hintId} className="form-field__hint">
-          {hint}
-        </p>
-      )}
       {children({
         id,
         name: id,
         'aria-invalid': Boolean(message),
         'aria-describedby': describedBy || undefined,
       })}
+      {hint && (
+        <p id={hintId} className="form-field__hint">
+          {hint}
+        </p>
+      )}
       {message && (
         <p id={errorId} className="form-field__error">
           <Icon name="alert-circle" size={18} />
