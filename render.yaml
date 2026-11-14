@@ -9,6 +9,10 @@ services:
     name: kaagapay-api
     runtime: docker
     plan: free
+    # Closest Render region to the Philippines. Keep the database in
+    # Singapore too (TiDB Cloud / Aiven), or every query crosses an ocean.
+    # Can't be changed after the service is created.
+    region: singapore
     rootDir: backend
     dockerfilePath: ./Dockerfile
     dockerContext: .
