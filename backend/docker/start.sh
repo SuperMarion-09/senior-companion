@@ -15,7 +15,9 @@ fi
 
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
+# No view:cache: the app has no Blade views of its own (resources/views is
+# empty, so git doesn't even store it). Email layouts from Laravel itself are
+# compiled into storage/framework/views the first time an email is sent.
 
 # Safe to run on every start: only migrations that haven't run yet are applied.
 php artisan migrate --force

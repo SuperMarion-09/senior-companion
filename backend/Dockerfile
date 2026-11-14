@@ -31,7 +31,12 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction --no-progress
 
 COPY . .
-RUN composer dump-autoload --optimize --no-dev --classmap-authoritative \
+# Recreate the folders Laravel writes to: .dockerignore leaves out their
+# contents, and git doesn't store empty folders.
+RUN mkdir -p storage/app/private storage/app/public storage/logs \
+        storage/framework/cache/data storage/framework/sessions storage/framework/views \
+        bootstrap/cache \
+    && composer dump-autoload --optimize --no-dev --classmap-authoritative \
     && chown -R www-data:www-data storage bootstrap/cache
 
 COPY docker/start.sh /usr/local/bin/start
