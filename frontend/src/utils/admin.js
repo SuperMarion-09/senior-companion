@@ -37,8 +37,8 @@ export const STATUS_ACTIONS = {
     tone: 'primary',
     title: 'Mark this booking as completed?',
     text: 'Do this after the companion has finished the service. It cannot be undone.',
-    reasonLabel: 'Note about the visit',
-    notify: false,
+    reasonLabel: 'A few words about the visit',
+    notify: true,
   },
   rejected: {
     label: 'Reject request',

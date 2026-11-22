@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Api\Admin\ClientController;
 use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\EmailTemplateController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\HealthController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/bookings/{booking:reference}', [AdminBookingController::class, 'update'])->name('bookings.update');
         Route::post('/bookings/{booking:reference}/status', [AdminBookingController::class, 'changeStatus'])->name('bookings.status');
         Route::post('/bookings/{booking:reference}/notes', [AdminBookingController::class, 'storeNote'])->name('bookings.notes');
+
+        // Email template previews (nothing is sent).
+        Route::get('/email-templates', [EmailTemplateController::class, 'index'])->name('email-templates.index');
+        Route::post('/email-templates/{template}/preview', [EmailTemplateController::class, 'preview'])
+            ->where('template', '[a-z0-9-]+')
+            ->name('email-templates.preview');
 
         Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
         Route::get('/clients/{clientKey}', [ClientController::class, 'show'])

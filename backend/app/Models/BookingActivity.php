@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * One entry on a booking's timeline: the request itself, a status change,
- * an internal note or an edit. Only administrators ever see these.
+ * an internal note, an edit or a reminder email. Only administrators ever see these.
  */
 #[Fillable(['admin_id', 'type', 'from_status', 'to_status', 'body', 'notification'])]
 class BookingActivity extends Model
@@ -20,6 +20,9 @@ class BookingActivity extends Model
     public const TYPE_NOTE = 'note';
 
     public const TYPE_UPDATE = 'update';
+
+    /** The automatic reminder email the day before the visit (bookings:send-reminders). */
+    public const TYPE_REMINDER = 'reminder';
 
     public function booking(): BelongsTo
     {

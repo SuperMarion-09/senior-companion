@@ -30,6 +30,8 @@ class StoreBookingRequest extends FormRequest
             'agreed_to_terms' => ['accepted'],
             // Save it as confirmed straight away instead of pending.
             'confirm' => ['nullable', 'boolean'],
+            // Email the family: "request received", or the full confirmation when confirmed now.
+            'notify_client' => ['sometimes', 'boolean'],
         ];
     }
 

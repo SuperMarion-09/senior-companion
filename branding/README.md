@@ -61,7 +61,8 @@ The approved logo (Concept 1, *Magkaagapay*) is live on the website:
 
 If you rebuild the logo files, copy them there again.
 
-Not done yet: the booking emails sent by the backend
-(`backend/app/Notifications/BookingStatusChanged.php`) still use Laravel's
-default email design. `templates/booking-confirmation-email.html` is the
-branded design for them; its images must be hosted at full `https://` URLs first.
+The emails sent by the backend use this branding through the email template
+system (see `docs/EMAIL_TEMPLATES.md`). `frontend/public/email/` holds copies
+of the logo PNGs from `exports/` so the website hosts them at full `https://`
+addresses for mail apps. `templates/booking-confirmation-email.html` was the
+starting design for it.

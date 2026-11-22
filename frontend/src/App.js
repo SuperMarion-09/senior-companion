@@ -6,6 +6,7 @@ import AdminBookingDetailPage from './pages/AdminBookingDetailPage';
 import AdminBookingsPage from './pages/AdminBookingsPage';
 import AdminClientDetailPage from './pages/AdminClientDetailPage';
 import AdminClientsPage from './pages/AdminClientsPage';
+import AdminEmailTemplatesPage from './pages/AdminEmailTemplatesPage';
 import AdminHomePage from './pages/AdminHomePage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminNewBookingPage from './pages/AdminNewBookingPage';
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/admin/bookings/:reference" element={<AdminBookingDetailPage />} />
           <Route path="/admin/clients" element={<AdminClientsPage />} />
           <Route path="/admin/clients/:clientKey" element={<AdminClientDetailPage />} />
+          <Route path="/admin/emails" element={<AdminEmailTemplatesPage />} />
         </Route>
       </Route>
     </Routes>

@@ -2,18 +2,30 @@
 
 namespace App\Notifications;
 
+use App\Mail\KaagapayMail;
+use App\Mail\Templates\BookingEmailData;
 use App\Models\Booking;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
  * Email to the family contact person after an administrator confirms,
- * rejects or cancels their booking. Sent by BookingStatusService.
+ * rejects, cancels or completes their booking. Sent by BookingStatusService.
+ *
+ * Uses the branded templates in resources/views/emails/templates/
+ * (see docs/EMAIL_TEMPLATES.md).
  */
 class BookingStatusChanged extends Notification
 {
     /** The statuses families are emailed about. */
-    public const STATUSES = [Booking::STATUS_CONFIRMED, Booking::STATUS_REJECTED, Booking::STATUS_CANCELLED];
+    public const STATUSES = [Booking::STATUS_CONFIRMED, Booking::STATUS_REJECTED, Booking::STATUS_CANCELLED, Booking::STATUS_COMPLETED];
+
+    /** Which email template each status uses. */
+    public const TEMPLATES = [
+        Booking::STATUS_CONFIRMED => 'booking-approved',
+        Booking::STATUS_REJECTED => 'booking-rejected',
+        Booking::STATUS_CANCELLED => 'booking-cancellation',
+        Booking::STATUS_COMPLETED => 'service-completed',
+    ];
 
     public function __construct(
         public Booking $booking,
@@ -28,43 +40,38 @@ class BookingStatusChanged extends Notification
         return ['mail'];
     }
 
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable): KaagapayMail
     {
         $booking = $this->booking;
-        $phone = config('kaagapay.contact_phone');
+        $template = self::TEMPLATES[$booking->status];
 
-        $message = (new MailMessage)->greeting("Hello {$booking->contact_person_name},");
-
-        match ($booking->status) {
-            Booking::STATUS_CONFIRMED => $message
-                ->subject("Booking confirmed – {$booking->reference}")
-                ->line("Good news: the companion booking for {$booking->client_name} is confirmed.")
-                ->line('Your companion will arrive at the agreed time and place.'),
-            Booking::STATUS_REJECTED => $message
-                ->subject("Booking update – {$booking->reference}")
-                ->line("We are sorry, we could not arrange a companion for {$booking->client_name} on this date."),
-            Booking::STATUS_CANCELLED => $message
-                ->subject("Booking cancelled – {$booking->reference}")
-                ->line("The companion booking for {$booking->client_name} has been cancelled."),
+        // What the admin typed: a personal note when approving, a few words
+        // about the visit when completing, the reason otherwise.
+        $extra = match ($booking->status) {
+            Booking::STATUS_CONFIRMED => ['admin_note' => $this->reason],
+            Booking::STATUS_COMPLETED => ['visit_summary' => $this->reason, 'rebook_url' => config('kaagapay.email.booking_url')],
+            default => ['reason' => $this->reason],
         };
 
-        if ($this->reason) {
-            $message->line("Note from Kaagapay: {$this->reason}");
+        return (new KaagapayMail($template, BookingEmailData::from($booking, $extra)))
+            ->to(...$this->recipient($notifiable));
+    }
+
+    /**
+     * BookingStatusService routes the email as [address => name].
+     *
+     * @return array{0: string, 1: string|null}
+     */
+    private function recipient(object $notifiable): array
+    {
+        $route = $notifiable->routeNotificationFor('mail', $this);
+
+        if (is_array($route)) {
+            $address = array_key_first($route);
+
+            return is_string($address) ? [$address, $route[$address]] : [(string) reset($route), null];
         }
 
-        $message
-            ->line("Reference: {$booking->reference}")
-            ->line('Date: '.$booking->booking_date->format('l, j F Y'))
-            ->line('Start time: '.$booking->startsAt()->format('g:i A'))
-            ->line("Duration: {$booking->duration_hours} hours");
-
-        if ($booking->status === Booking::STATUS_CONFIRMED) {
-            $message->line('Kaagapay provides non-medical companionship only. Transportation, parking and other expenses are billed separately. Extending the booking on the day needs our approval.');
-        }
-
-        return $message
-            ->line("Questions or changes? Call us at {$phone}.")
-            ->line('In an emergency, always call 911 first.')
-            ->salutation('Salamat po, Kaagapay');
+        return [(string) $route, $this->booking->contact_person_name];
     }
 }

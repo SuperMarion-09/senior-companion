@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: 'home', end: true },
   { to: '/admin/bookings', label: 'Bookings', icon: 'calendar' },
   { to: '/admin/clients', label: 'Clients', icon: 'users' },
+  { to: '/admin/emails', label: 'Email templates', icon: 'mail' },
 ];
 
 /**

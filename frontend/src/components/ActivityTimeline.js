@@ -1,7 +1,7 @@
 import { ADMIN_STATUSES, formatDateTime } from '../utils/admin';
 import Icon from './Icon';
 
-const ICONS = { created: 'plus-circle', status: 'refresh', note: 'file-text', update: 'clipboard' };
+const ICONS = { created: 'plus-circle', status: 'refresh', note: 'file-text', update: 'clipboard', reminder: 'mail' };
 
 function title(activity) {
   const by = activity.admin_name || 'An administrator';
@@ -13,13 +13,15 @@ function title(activity) {
       return `${by} changed the status to ${ADMIN_STATUSES[activity.to_status]?.label || activity.to_status}`;
     case 'note':
       return `${by} added a note`;
+    case 'reminder':
+      return 'Reminder email for the visit';
     default:
       return `${by} edited the booking`;
   }
 }
 
 /**
- * The booking's history, newest first: status changes, internal notes and edits.
+ * The booking's history, newest first: status changes, internal notes, edits and reminder emails.
  */
 export default function ActivityTimeline({ activities }) {
   return (
