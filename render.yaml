@@ -78,10 +78,16 @@ services:
       - key: MYSQL_ATTR_SSL_CA
         value: /etc/ssl/certs/ca-certificates.crt
 
-      # Emails are written to the log until a mail service is set up (see README).
+      # Emails go out through Brevo's HTTPS API. Render's free plan blocks the
+      # SMTP ports (25, 465, 587), so SMTP services such as Gmail can't be used.
+      # See docs/DEPLOYMENT.md → "Turn on real emails".
       - key: MAIL_MAILER
-        value: log
+        value: brevo
+      # Brevo → SMTP & API → API keys (starts with "xkeysib-").
+      - key: BREVO_API_KEY
+        sync: false
+      # Must be a sender verified in Brevo (Senders, domains & dedicated IPs).
       - key: MAIL_FROM_ADDRESS
-        value: hello@kaagapay.example
+        sync: false
       - key: MAIL_FROM_NAME
         value: Kaagapay

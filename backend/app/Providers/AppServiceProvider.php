@@ -4,9 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory;
+use Symfony\Component\Mailer\Transport\Dsn;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,5 +46,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Password rules for admin accounts (used by `php artisan admin:create`).
         Password::defaults(fn () => Password::min(12)->letters()->mixedCase()->numbers());
+
+        // MAIL_MAILER=brevo sends through Brevo's HTTPS API. Render's free plan
+        // blocks the SMTP ports, so plain SMTP (e.g. Gmail) can't send from there.
+        Mail::extend('brevo', fn () => (new BrevoTransportFactory)->create(
+            new Dsn('brevo+api', 'default', (string) config('services.brevo.key')),
+        ));
     }
 }
