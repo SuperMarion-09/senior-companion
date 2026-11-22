@@ -15,8 +15,8 @@ return [
 
     // Shown in emails to families. Keep in sync with CONTACT in
     // frontend/src/content/siteContent.js.
-    'contact_phone' => env('KAAGAPAY_CONTACT_PHONE', '+63 900 000 0000'),
-    'contact_email' => env('KAAGAPAY_CONTACT_EMAIL', 'hello@kaagapay.example'),
+    'contact_phone' => env('KAAGAPAY_CONTACT_PHONE', '00'),
+    'contact_email' => env('KAAGAPAY_CONTACT_EMAIL', 'subtestemail27@gmail.com'),
 
     /*
     | Branding used by every email template (see docs/EMAIL_TEMPLATES.md).

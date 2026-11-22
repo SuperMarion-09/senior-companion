@@ -36,8 +36,11 @@ function validate(form) {
 export default function BookingStatusPage() {
   const location = useLocation();
   const resultRef = useRef(null);
-  // The confirmation page passes the reference along so the family only types their number.
-  const [form, setForm] = useState({ reference: location.state?.reference || '', contactNumber: '' });
+  // The confirmation page (router state) and the email button (?reference=KGP-…) pass the
+  // reference along, so the family only types their number.
+  const linkedReference =
+    location.state?.reference || new URLSearchParams(location.search).get('reference')?.trim().toUpperCase() || '';
+  const [form, setForm] = useState({ reference: linkedReference, contactNumber: '' });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
   const [booking, setBooking] = useState(null);

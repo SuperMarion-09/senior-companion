@@ -10,15 +10,17 @@
     $primary = $variant === 'primary';
     $bg = $primary ? $c['sage'] : $c['surface'];
     $fg = $primary ? '#ffffff' : $c['sage_deep'];
+    // The layout's Gmail/iOS link reset forces `color: inherit !important` on every <a>,
+    // so the colour is also set on the cell (what the link inherits) and on an inner span.
 @endphp
 @if (filled($href))
 <tr>
     <td class="em-px" align="{{ $center ? 'center' : 'left' }}" style="padding:10px 40px {{ $fallback ? '12px' : '24px' }};">
         <table role="presentation" class="em-btn-table" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;">
             <tr>
-                <td align="center" bgcolor="{{ $bg }}" style="border-radius:12px; background-color:{{ $bg }}; mso-padding-alt:16px 32px;{{ $primary ? '' : ' border:2px solid '.$c['sage'].';' }}">
+                <td align="center" bgcolor="{{ $bg }}" style="border-radius:12px; background-color:{{ $bg }}; color:{{ $fg }}; mso-padding-alt:16px 32px;{{ $primary ? '' : ' border:2px solid '.$c['sage'].';' }}">
                     <a href="{{ $href }}" target="_blank" class="em-btn"
-                       style="display:inline-block; padding:{{ $primary ? '16px 32px' : '14px 30px' }}; border-radius:12px; font-family:{!! \App\Mail\Templates\EmailTheme::FONT_BODY !!}; font-size:18px; line-height:1.25; font-weight:700; color:{{ $fg }}; text-decoration:none; mso-line-height-rule:exactly;">{{ $slot }}</a>
+                       style="display:inline-block; padding:{{ $primary ? '16px 32px' : '14px 30px' }}; border-radius:12px; font-family:{!! \App\Mail\Templates\EmailTheme::FONT_BODY !!}; font-size:18px; line-height:1.25; font-weight:700; color:{{ $fg }}; text-decoration:none; mso-line-height-rule:exactly;"><span style="color:{{ $fg }};">{{ $slot }}</span></a>
                 </td>
             </tr>
         </table>

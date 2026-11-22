@@ -33,7 +33,15 @@ final class BookingEmailData
             'booking_destination' => $booking->destination,
             'booking_status' => $booking->status,
             'special_instructions' => $booking->special_instructions,
-            'booking_url' => config('kaagapay.email.booking_status_url'),
+            'booking_url' => self::statusUrl($booking->reference),
         ], $extra);
+    }
+
+    /** The status page with the reference filled in, so the family only types their number. */
+    public static function statusUrl(?string $reference): string
+    {
+        $url = config('kaagapay.email.booking_status_url');
+
+        return filled($reference) ? $url.'?reference='.rawurlencode($reference) : $url;
     }
 }
