@@ -87,7 +87,7 @@ final class SampleData
             'booking_duration' => '3 hours',
             'booking_location' => '12 Mabini Street, Barangay San Roque, Marikina City',
             'booking_destination' => 'Marikina River Park',
-            'booking_url' => config('kaagapay.email.booking_status_url'),
+            'booking_url' => BookingEmailData::statusUrl('KGP-7H4QMD'),
         ];
     }
 

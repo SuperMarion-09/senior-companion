@@ -11,9 +11,10 @@ export const BRAND = {
 
 // TODO: Replace these placeholders with Kaagapay's real contact details.
 export const CONTACT = {
-  phone: '+63 900 000 0000',
-  phoneHref: 'tel:+639000000000',
-  email: 'hello@kaagapay.example',
+  // Placeholders until the official support number and email are ready.
+  phone: '00',
+  phoneHref: 'tel:00',
+  email: 'subtestemail27@gmail.com',
   address: 'Office address to follow, Metro Manila, Philippines',
   hours: 'Monday to Saturday, 8:00 AM to 6:00 PM',
 };
