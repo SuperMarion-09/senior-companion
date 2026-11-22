@@ -64,6 +64,16 @@ class Booking extends Model
     /** Must match `value` of SERVICES in frontend/src/content/siteContent.js. */
     public const SERVICE_TYPES = ['errand', 'shopping', 'walking', 'appointment', 'social', 'general'];
 
+    /** The names families see (emails). Must match `title` of SERVICES in siteContent.js. */
+    public const SERVICE_NAMES = [
+        'errand' => 'Errand Companion',
+        'shopping' => 'Shopping Assistance',
+        'walking' => 'Walking Companion',
+        'appointment' => 'Appointment Companion',
+        'social' => 'Social Companion',
+        'general' => 'General Non-Medical Assistance',
+    ];
+
     // Booking rules, the same as frontend/src/utils/booking.js.
     public const MIN_DURATION_HOURS = 3;
 

@@ -8,6 +8,7 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Booking;
 use App\Models\BookingActivity;
+use App\Services\BookingMailer;
 use App\Support\Phone;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -22,23 +23,29 @@ class BookingController extends Controller
     /**
      * POST /api/bookings
      */
-    public function store(StoreBookingRequest $request): JsonResponse
+    public function store(StoreBookingRequest $request, BookingMailer $mailer): JsonResponse
     {
-        $booking = DB::transaction(function () use ($request) {
+        [$booking, $activity] = DB::transaction(function () use ($request) {
             $booking = new Booking($request->safe()->except('agreed_to_terms'));
             $booking->reference = Booking::generateReference();
             $booking->status = Booking::STATUS_PENDING;
             $booking->terms_accepted_at = now();
             $booking->save();
 
-            $booking->activities()->create([
+            $activity = $booking->activities()->create([
                 'type' => BookingActivity::TYPE_CREATED,
                 'to_status' => Booking::STATUS_PENDING,
                 'body' => 'Booking request sent through the website.',
             ]);
 
-            return $booking;
+            return [$booking, $activity];
         });
+
+        // "We received your request" email, only once the booking is saved.
+        // If it fails the booking still stands; the timeline shows the email failed.
+        if ($notification = $mailer->send($booking, 'booking-request-received')) {
+            $activity->update(['notification' => $notification]);
+        }
 
         return ApiResponse::success(
             ['booking' => $booking->toPublicArray()],

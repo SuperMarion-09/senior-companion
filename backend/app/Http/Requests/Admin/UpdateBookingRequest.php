@@ -26,6 +26,8 @@ class UpdateBookingRequest extends FormRequest
             // The booking's updated_at when the admin opened the form, to detect
             // another admin saving changes in the meantime.
             'updated_at' => ['nullable', 'string'],
+            // Email the family when a confirmed booking moves to a new date or time.
+            'notify_client' => ['sometimes', 'boolean'],
         ];
     }
 

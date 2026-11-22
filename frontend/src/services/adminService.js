@@ -75,3 +75,23 @@ export async function getClient(clientKey) {
   const response = await api.get(`/admin/clients/${encodeURIComponent(clientKey)}`);
   return response.data.data;
 }
+
+/** Resolves with { templates, categories, statuses } for the Email templates page. */
+export async function listEmailTemplates() {
+  const response = await api.get('/admin/email-templates');
+  return response.data.data;
+}
+
+/**
+ * Renders one email template with sample data. Nothing is sent.
+ * options: { scenario, bookingStatus, data } where data overrides sample values.
+ * Resolves with { subject, preheader, from, html, text, size_kb, data }.
+ */
+export async function previewEmailTemplate(key, { scenario, bookingStatus, data } = {}) {
+  const response = await api.post(`/admin/email-templates/${encodeURIComponent(key)}/preview`, {
+    scenario: scenario || 'default',
+    booking_status: bookingStatus || null,
+    data: data || {},
+  });
+  return response.data.data;
+}

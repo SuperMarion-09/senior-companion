@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\UpdateBookingRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Booking;
 use App\Models\BookingActivity;
+use App\Services\BookingMailer;
 use App\Services\BookingStatusService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -86,20 +87,21 @@ class BookingController extends Controller
      * POST /api/admin/bookings
      *
      * A booking entered by an admin (phone call, walk-in). Saved as pending,
-     * or as confirmed when `confirm` is true. No email is sent.
+     * or as confirmed when `confirm` is true. With `notify_client`, the family
+     * gets "request received" (pending) or the full booking confirmation.
      */
-    public function store(StoreBookingRequest $request): JsonResponse
+    public function store(StoreBookingRequest $request, BookingMailer $mailer): JsonResponse
     {
         $status = $request->boolean('confirm') ? Booking::STATUS_CONFIRMED : Booking::STATUS_PENDING;
 
-        $booking = DB::transaction(function () use ($request, $status) {
-            $booking = new Booking($request->safe()->except(['agreed_to_terms', 'confirm']));
+        [$booking, $activity] = DB::transaction(function () use ($request, $status) {
+            $booking = new Booking($request->safe()->except(['agreed_to_terms', 'confirm', 'notify_client']));
             $booking->reference = Booking::generateReference();
             $booking->status = $status;
             $booking->terms_accepted_at = now();
             $booking->save();
 
-            $booking->activities()->create([
+            $activity = $booking->activities()->create([
                 'admin_id' => $request->user()->id,
                 'type' => BookingActivity::TYPE_CREATED,
                 'to_status' => $status,
@@ -108,10 +110,22 @@ class BookingController extends Controller
                     : 'Booking entered by an administrator.',
             ]);
 
-            return $booking;
+            return [$booking, $activity];
         });
 
-        return $this->bookingResponse($booking, "Booking {$booking->reference} created.", [], 201);
+        $notification = null;
+        if ($request->boolean('notify_client')) {
+            $template = $status === Booking::STATUS_CONFIRMED ? 'booking-confirmation' : 'booking-request-received';
+            $notification = $mailer->send($booking, $template);
+            $activity->update(['notification' => $notification]);
+        }
+
+        return $this->bookingResponse(
+            $booking,
+            "Booking {$booking->reference} created.".self::notificationMessage($notification),
+            ['notification' => $notification],
+            201,
+        );
     }
 
     /**
@@ -125,7 +139,7 @@ class BookingController extends Controller
     /**
      * PUT /api/admin/bookings/{reference}
      */
-    public function update(UpdateBookingRequest $request, Booking $booking): JsonResponse
+    public function update(UpdateBookingRequest $request, Booking $booking, BookingMailer $mailer): JsonResponse
     {
         if ($booking->isFinal()) {
             return ApiResponse::error("This booking is {$booking->status} and can no longer be edited.", 409);
@@ -136,23 +150,43 @@ class BookingController extends Controller
             return ApiResponse::error('Someone else changed this booking while you were editing. Please reload it and make your changes again.', 409);
         }
 
-        $booking->fill($request->safe()->except('updated_at'));
+        $previousStart = $booking->startsAt();
+
+        $booking->fill($request->safe()->except(['updated_at', 'notify_client']));
         $changed = array_keys(array_intersect_key($booking->getDirty(), self::FIELD_LABELS));
 
         if ($changed === []) {
             return $this->bookingResponse($booking, 'No changes to save.');
         }
 
-        DB::transaction(function () use ($booking, $changed, $request) {
+        $activity = DB::transaction(function () use ($booking, $changed, $request) {
             $booking->save();
-            $booking->activities()->create([
+
+            return $booking->activities()->create([
                 'admin_id' => $request->user()->id,
                 'type' => BookingActivity::TYPE_UPDATE,
                 'body' => 'Updated '.implode(', ', array_map(fn ($field) => self::FIELD_LABELS[$field], $changed)).'.',
             ]);
         });
 
-        return $this->bookingResponse($booking, 'Booking details saved.');
+        // A confirmed visit moved to another day or time: tell the family, showing old and new.
+        $notification = null;
+        $moved = array_intersect($changed, ['booking_date', 'start_time']) !== [];
+        if ($moved && $booking->status === Booking::STATUS_CONFIRMED && $request->boolean('notify_client')) {
+            $startsAt = $booking->startsAt();
+            $notification = $mailer->send($booking, 'booking-rescheduled', [
+                'booking_status' => 'rescheduled',
+                'previous_booking_date' => $previousStart->isSameDay($startsAt) ? null : $previousStart->format('l, j F Y'),
+                'previous_booking_time' => $previousStart->format('H:i') === $startsAt->format('H:i') ? null : $previousStart->format('g:i A'),
+            ]);
+            $activity->update(['notification' => $notification]);
+        }
+
+        return $this->bookingResponse(
+            $booking,
+            'Booking details saved.'.self::notificationMessage($notification),
+            ['notification' => $notification],
+        );
     }
 
     /**
@@ -168,14 +202,19 @@ class BookingController extends Controller
             $request->boolean('notify_client'),
         );
 
-        $message = 'Booking marked as '.$result['booking']->status.'.';
-        $message .= match ($result['notification']) {
+        $message = 'Booking marked as '.$result['booking']->status.'.'.self::notificationMessage($result['notification']);
+
+        return $this->bookingResponse($result['booking'], $message, ['notification' => $result['notification']]);
+    }
+
+    /** What the admin is told about the email to the family, after the main message. */
+    private static function notificationMessage(?string $notification): string
+    {
+        return match ($notification) {
             'sent' => ' The family has been emailed.',
             'failed' => ' The email to the family could not be sent, so please call them instead.',
             default => '',
         };
-
-        return $this->bookingResponse($result['booking'], $message, ['notification' => $result['notification']]);
     }
 
     /**

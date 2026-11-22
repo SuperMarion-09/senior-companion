@@ -475,11 +475,19 @@ share of a total, never as growth rates, so small numbers are not exaggerated.
 family contact number belong to one client (`client_key`). Contact details shown
 are from their most recent booking.
 
-**Emails to families.** When confirming, rejecting or cancelling, the dialog
-offers *Email the family* if the booking has an email address. The email is
-sent only after the change is saved, using Laravel's built-in notifications
-(`app/Notifications/BookingStatusChanged.php`); if sending fails, the change
-still stands and the admin is told to call instead. With `MAIL_MAILER=log`
+**Emails to families.** Sent only to a booking with an email address, and
+only after the change is saved; if sending fails, the change still stands, the
+timeline shows the failed email and the admin is told to call instead.
+
+| When | Email | Who decides |
+| ---- | ----- | ----------- |
+| A family sends the booking form | Request received | Always |
+| An admin enters a booking | Request received, or the full confirmation if confirmed now | *Email the family* checkbox |
+| An admin confirms, rejects, cancels or completes | Approved, not available, cancelled, or thank-you after the visit | *Email the family* in the dialog |
+| An admin moves a confirmed booking to another date or time | New date (old and new shown) | *Email the family* checkbox in the edit form |
+| 5:00 PM the day before a confirmed visit | Reminder with a checklist | Automatic (`php artisan bookings:send-reminders`, needs the scheduler: see docs/EMAIL_TEMPLATES.md) |
+
+With `MAIL_MAILER=log`
 (the default) emails are written to `backend/storage/logs/laravel.log`, not
 sent. Set the `MAIL_*` values in `backend/.env` to send real email.
 
@@ -492,6 +500,23 @@ sent. Set the `MAIL_*` values in `backend/.env` to send real email.
 ```bash
 cd backend && php artisan db:seed --class=DemoBookingSeeder
 ```
+
+---
+
+## 8e. Email templates
+
+All emails to families share one branded design: 22 templates (account,
+bookings and payments, companions and visits, notices and news) built from
+shared Blade components in `backend/resources/views/components/email/`.
+Status emails from the admin side already use them.
+
+- **Preview:** admins open **Email templates** in the admin menu
+  (`/admin/emails`): every template on desktop or phone width, with sample
+  scenarios, booking statuses, editable sample data, a link check and the
+  plain-text version. Developers can also open http://localhost:8000/email-previews.
+- **Send a test to yourself:** `cd backend && php artisan email:test booking-approved you@example.com`
+- **Add or change a template, and connect one to the backend:** see
+  [docs/EMAIL_TEMPLATES.md](docs/EMAIL_TEMPLATES.md).
 
 ---
 

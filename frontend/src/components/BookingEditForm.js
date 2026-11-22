@@ -44,9 +44,18 @@ export default function BookingEditForm({ booking, onSaved, onCancel }) {
   const [form, setForm] = useState(() => toForm(booking));
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [confirmNow, setConfirmNow] = useState(false);
+  const [notifyClient, setNotifyClient] = useState(true);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+
+  const hasEmail = /^\S+@\S+\.\S+$/.test(form.email.trim());
+  // Editing: a confirmed visit moved to another day or time can be emailed to the family.
+  const isMoved =
+    !isNew &&
+    booking.status === 'confirmed' &&
+    (form.booking_date !== String(booking.booking_date ?? '') || form.start_time !== String(booking.start_time ?? ''));
+  const offerEmail = hasEmail && (isNew || isMoved);
 
   const field = (name) => ({
     id: `edit-${name}`,
@@ -74,10 +83,11 @@ export default function BookingEditForm({ booking, onSaved, onCancel }) {
         // Empty (a new booking with no duration chosen yet) stays empty, so Laravel says it is required.
         duration_hours: form.duration_hours ? Number(form.duration_hours) : null,
       };
+      const notify = offerEmail && notifyClient;
       const result = isNew
-        ? await createBooking({ ...payload, agreed_to_terms: agreedToTerms, confirm: confirmNow })
-        : await updateBooking(booking.reference, { ...payload, updated_at: booking.updated_at });
-      toast.success(result.message);
+        ? await createBooking({ ...payload, agreed_to_terms: agreedToTerms, confirm: confirmNow, notify_client: notify })
+        : await updateBooking(booking.reference, { ...payload, updated_at: booking.updated_at, notify_client: notify });
+      (result.notification === 'failed' ? toast.warning : toast.success)(result.message);
       onSaved(result.booking);
     } catch (error) {
       const fieldErrors = error.errors || {};
@@ -151,11 +161,32 @@ export default function BookingEditForm({ booking, onSaved, onCancel }) {
           />
           <FormCheckbox
             id="edit-confirm"
-            label="Mark it as confirmed now (otherwise it is saved as pending). No email is sent."
+            label="Mark it as confirmed now (otherwise it is saved as pending)."
             checked={confirmNow}
             onChange={(event) => setConfirmNow(event.target.checked)}
           />
+          {offerEmail && (
+            <FormCheckbox
+              id="edit-notify"
+              label={
+                confirmNow
+                  ? `Email the family the booking confirmation at ${form.email.trim()}`
+                  : `Email the family that we received the request, at ${form.email.trim()}`
+              }
+              checked={notifyClient}
+              onChange={(event) => setNotifyClient(event.target.checked)}
+            />
+          )}
         </fieldset>
+      )}
+
+      {isMoved && hasEmail && (
+        <FormCheckbox
+          id="edit-notify"
+          label={`Email the family the new date and time at ${form.email.trim()}`}
+          checked={notifyClient}
+          onChange={(event) => setNotifyClient(event.target.checked)}
+        />
       )}
 
       <div className="actions">
